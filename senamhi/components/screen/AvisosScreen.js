@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Text,  View  } from 'react-native';
 
 
-export default class screen3 extends Component {
+export default class AvisosScreen extends Component {
   render() {
     return (
         <View>
         <Text>
-             screen3
+             ventana de avisos
          </Text>
 
      </View> 

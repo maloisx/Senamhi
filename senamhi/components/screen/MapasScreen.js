@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Text,  View  } from 'react-native';
 
 
-export default class screen2 extends Component {
+export default class MapasScreen extends Component {
   render() {
     return (
         <View>
         <Text>
-             screen2
+             ventana de mapas
          </Text>
 
      </View> 

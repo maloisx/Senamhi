@@ -5,7 +5,7 @@ import {
     StyleSheet,
     TouchableHighlight,
     Text,
-    View
+    View, Image , Dimensions
 } from 'react-native'
 
 
@@ -13,17 +13,21 @@ import React from 'react';
 
 import DrawerScreen from './drawerScreen';
 
+const { width , height } = Dimensions.get('window')
+const DEVICE_HEIGHT = height
+const DEVICE_WIDTH = width
+
 const DrawerNavigation = StackNavigator({
     DrawerStack: {screen: DrawerScreen}
 }, {
     headerMode: 'float',
     navigationOptions: ({navigation}) => ({
         headerStyle: {
-            backgroundColor: 'rgb(255, 45, 85)',
+            backgroundColor: '#246199',
             paddingLeft: 10,
             paddingRight: 10
         },
-        title: 'Home',
+        title: 'SENAMHI PERU',
         headerTintColor: 'white',
         headerLeft: <View>
             <TouchableHighlight 
@@ -34,7 +38,11 @@ const DrawerNavigation = StackNavigator({
                         navigation.navigate('DrawerClose');
                     }
                 }}>
-                <Text>Menu</Text>
+                <Image 
+                    style={{height: 32 , width: 32 }}
+                    resizeMode="cover" 
+                    source={require('../../public/images/menu_icon.png')} 
+                />
             </TouchableHighlight>
         </View>
     })

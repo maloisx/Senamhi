@@ -62,10 +62,11 @@ export default class Splash extends Component {
     this.state = {}    
   }
   componentDidMount(){
+     // esperamos 2 segundos para pasar del splash al drawerStack que contikene el menu
       var nav = this.props.navigation;
       setTimeout(function(){ 
         nav.navigate('DrawerStack')  
-      }, 2000);
+      }, 50); //2000
   }
 
   render() {
@@ -77,14 +78,14 @@ export default class Splash extends Component {
         <Image 
         style={style.backgroundImage}
         resizeMode="cover" 
-        source={require('../public/images/fondo.jpg')} 
+        source={require('../../public/images/fondo.jpg')} 
         />
 
         <View style={style.Splash} >
           <Image 
             style={style.img_logo}
             resizeMode="contain" 
-            source={require('../public/images/logo.png')}             
+            source={require('../../public/images/logo.png')}             
           />
           <Text style={style.txt_version}>
               v {version}

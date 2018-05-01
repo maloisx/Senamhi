@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import {StyleSheet, Text,  View  } from 'react-native';
+import { Text,  View  } from 'react-native';
 
 
-export default class screen1 extends Component {
+export default class AjustesScreen extends Component {
   render() {
     return (
         <View>
         <Text>
-             screen1
+             ventana de ajustes
          </Text>
 
      </View> 

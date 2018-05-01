@@ -13,8 +13,7 @@ import {
 } from 'react-native';
 
 import { StackNavigator } from 'react-navigation';
-import Splash from './senamhi/screens/Splash'
-import Main from './senamhi/components/main'
+import Splash from './senamhi/components/screen/Splash'
 import DrawerStack from './senamhi/components/stacks/drawerStack'
 
 const RootStack =  StackNavigator(
