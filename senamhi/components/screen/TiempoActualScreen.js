@@ -17,7 +17,7 @@ const style = {
     flexDirection: 'column'
   },
   border:{
-    borderWidth: 0,
+    borderWidth: 0.2,
     borderColor: '#ffffff'    
   },
   backgroundImage : {
@@ -29,14 +29,15 @@ const style = {
   },
   vw_AniadirCiudad: {
     //flex: 1 , 
+    flexDirection: 'row',
     justifyContent: 'center', 
     alignItems: 'flex-end',
     height: v_AnchoObjeto * 1 ,
     width : DEVICE_WIDTH   
   },
   bgImage_icon : {    
-    height: v_AnchoObjeto * 0.5,
-    width : v_AnchoObjeto * 0.5   
+    height: v_AnchoObjeto * 0.7,
+    width : v_AnchoObjeto * 0.7   
   },
   vw_NombreCiudad: {
     //flex: 1 , 
@@ -88,7 +89,7 @@ const style = {
     //flex: 1 , 
     justifyContent: 'center', 
     alignItems: 'center',
-    height: v_AnchoObjeto * 1.5 ,
+    height: v_AnchoObjeto * 2 ,
     width : DEVICE_WIDTH ,
     flexDirection: 'row' 
   },
@@ -96,11 +97,11 @@ const style = {
     flex: 1 , 
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: v_AnchoObjeto * 1.5   
+    height: v_AnchoObjeto * 2   
   },
   bgImage_PronosticoDia : {    
-    height: v_AnchoObjeto * 0.5,
-    width : v_AnchoObjeto * 0.5   
+    height: v_AnchoObjeto * 0.6,
+    width : v_AnchoObjeto * 0.6   
   },
   vw_PronosticoSemana: {
     flex: 1 , 
@@ -125,6 +126,31 @@ const style = {
 
 
 export default class TiempoActualScreen extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      latitude: null,
+      longitude: null,
+      error: null,
+    };
+  }
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          error: null,
+        });
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    );
+  }
+
   render() {
     return (
         <View style={style.conteiner} >
@@ -137,6 +163,10 @@ export default class TiempoActualScreen extends Component {
           <View style={style.conteiner_form} >
 
                   <View style={[style.border , style.vw_AniadirCiudad]} >
+
+                        <Text>Latitude: {this.state.latitude} / Longitude: {this.state.longitude}</Text>
+                        {this.state.error ? <Text>Error: {this.state.error}</Text> : null}
+
                         <Image 
                         style={style.bgImage_icon}
                         resizeMode="contain"  
