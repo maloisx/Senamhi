@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   Button,
-  View , Image , Dimensions , Navigator 
+  View , Image , Dimensions , Navigator , AsyncStorage
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
@@ -53,19 +53,17 @@ const style = {
 
 export default class Splash extends Component {
 
-  static navigationOptions = {
-    title: 'SENAMHI'
-  };
-
+  
   constructor(props) {
     super(props);
-    this.state = {}    
+    this.state = { title: 'SENAMHI'  }    
+    AsyncStorage.setItem("@xxx", "CARAJO");
   }
   componentDidMount(){
      // esperamos 2 segundos para pasar del splash al drawerStack que contikene el menu
       var nav = this.props.navigation;
       setTimeout(function(){ 
-        nav.navigate('DrawerStack')  
+        nav.navigate('DrawerStack')  , this.state
       }, 50); //2000
   }
 

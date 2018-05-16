@@ -5,7 +5,7 @@ import {
     StyleSheet,
     TouchableHighlight,
     Text,
-    View, Image , Dimensions
+    View, Image , Dimensions , AsyncStorage
 } from 'react-native'
 
 
@@ -17,6 +17,8 @@ const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
 const DEVICE_WIDTH = width
 
+
+
 const DrawerNavigation = StackNavigator({
     DrawerStack: {screen: DrawerScreen}
 }, {
@@ -27,7 +29,7 @@ const DrawerNavigation = StackNavigator({
             paddingLeft: 10,
             paddingRight: 10
         },
-        title: 'SENAMHI PERU',
+        title: "SENAMHI"  ,
         headerTintColor: 'white',
         headerLeft: <View>
             <TouchableHighlight 

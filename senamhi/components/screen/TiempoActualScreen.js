@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, Text,  View , Image , Dimensions } from 'react-native';
+import {StyleSheet, FlatList , ActivityIndicator , Text,  View , Image , Dimensions , ListView , AsyncStorage} from 'react-native';
 
 const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
@@ -17,8 +17,17 @@ const style = {
     flexDirection: 'column'
   },
   border:{
-    borderWidth: 0.2,
+    borderWidth: 0,
     borderColor: '#ffffff'    
+  },
+  borderBotton:{
+    borderBottomWidth: 0.2,
+    borderColor: '#ffffff'    
+  },
+  lineStyle:{
+    borderWidth: 0.5,
+    borderColor:'#ffffff',
+    margin:5,
   },
   backgroundImage : {
     position: 'absolute',
@@ -29,8 +38,8 @@ const style = {
   },
   vw_AniadirCiudad: {
     //flex: 1 , 
-    flexDirection: 'row',
-    justifyContent: 'center', 
+    //flexDirection: 'row',
+    //justifyContent: 'center', 
     alignItems: 'flex-end',
     height: v_AnchoObjeto * 1 ,
     width : DEVICE_WIDTH   
@@ -76,7 +85,7 @@ const style = {
   txt_TempActual_Valor: {
     color    : v_ColorText,
     fontWeight : 'bold',
-    fontSize : v_AnchoObjeto * 2.2
+    fontSize : v_AnchoObjeto * 1.8
   },
   txt_TempActual_Simbolo: {
     color    : v_ColorText,
@@ -89,7 +98,7 @@ const style = {
     //flex: 1 , 
     justifyContent: 'center', 
     alignItems: 'center',
-    height: v_AnchoObjeto * 2 ,
+    height: v_AnchoObjeto * 1.5 ,
     width : DEVICE_WIDTH ,
     flexDirection: 'row' 
   },
@@ -116,12 +125,12 @@ const style = {
     flexDirection: 'row',
     //alignItems: 'center',
     //justifyContent: 'space-between',
-    //height: v_AnchoObjeto * 1.5   ,
+    height: v_AnchoObjeto * 1.5   ,
     width : v_PronosticoSemanal_WIDTH 
   },
   txt_PronosticoSemanal_dia: {color : v_ColorText , fontWeight : 'bold', fontSize : v_AnchoObjeto * 0.4 },
   txt_PronosticoSemanal_max: {color : v_ColorText , fontWeight : 'bold', fontSize : v_AnchoObjeto * 0.4 },
-  txt_PronosticoSemanal_min: {color : v_ColorText , fontSize : v_AnchoObjeto * 0.4 },
+  txt_PronosticoSemanal_min: {color : v_ColorText ,                      fontSize : v_AnchoObjeto * 0.4 },
 }
 
 
@@ -134,10 +143,20 @@ export default class TiempoActualScreen extends Component {
       latitude: null,
       longitude: null,
       error: null,
+      //data : null , 
+      ciudad :null,
+      data_resumen : null,
+      data_detalle: {} ,
+      data_temp_actual : null ,
+
+      xxx : null,
     };
   }
 
   componentDidMount() {
+
+    AsyncStorage.getItem('@xxx').then((value) => this.setState({ 'xxx': value }))
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -145,11 +164,45 @@ export default class TiempoActualScreen extends Component {
           longitude: position.coords.longitude,
           error: null,
         });
+
+        /* ************************ */
+        this.fn_llenar_datos();            
+        /* ************************ */
       },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
     );
+
   }
+
+    fn_llenar_datos(){
+        //fetch('http://172.25.0.210/rest/?ws=pronostico&c=Lima&f=')
+        //fetch('http://172.25.0.210/rest/?ws=pronostico&lon=-77.017130&lat=-12.072269')
+        //fetch('http://172.25.0.210/rest/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
+        fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
+          .then((response) => response.json())
+          .then((responseJson) => {
+
+            this.setState({
+              data: responseJson ,
+              ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
+              data_resumen : responseJson.RESUMEN ,
+              data_detalle : responseJson.DETALLE , 
+              data_temp_actual : responseJson.DETALLE[0].TEMPERATURA,
+              data_humedad_actual : responseJson.RESUMEN[0].RH,
+              data_t_max_actual : responseJson.RESUMEN[0].T_MAX,
+              data_t_min_actual : responseJson.RESUMEN[0].T_MIN,
+              data_viento_actual : responseJson.RESUMEN[0].RACHA,
+            }, function(){
+                
+            });
+
+          })
+          .catch((error) =>{
+            console.error(error);
+          });
+
+    }
 
   render() {
     return (
@@ -161,181 +214,125 @@ export default class TiempoActualScreen extends Component {
         source={require('../../public/images/fondo.jpg')} 
         />
           <View style={style.conteiner_form} >
-
+                  {/* ***************************************************************************************** */}
                   <View style={[style.border , style.vw_AniadirCiudad]} >
 
+                        {/*
                         <Text>Latitude: {this.state.latitude} / Longitude: {this.state.longitude}</Text>
-                        {this.state.error ? <Text>Error: {this.state.error}</Text> : null}
+                        */}
+                        <Text>{this.state.xxx}</Text>
 
+                     
                         <Image 
                         style={style.bgImage_icon}
                         resizeMode="contain"  
                         source={require('../../public/images/plus.png')} 
                         /> 
                   </View>
-              
+                  {/* ***************************************************************************************** */}
                   <View style={[style.border , style.vw_NombreCiudad]} >
-                    <Text style={style.txt_TempActual_Ciudad} > Nombre Ciudad </Text> 
+                    <Text style={style.txt_TempActual_Ciudad} > {this.state.ciudad} </Text> 
                   </View>
-
+                  {/* ***************************************************************************************** */}
                   <View style={[style.border , style.vw_TempActual]} >
                       <View style={[style.border,style.vw_TempActual_Btn_NextPrev]}>
+                        {/*
                         <Image 
                         style={style.bgImage_icon}
                         resizeMode="contain"  
                         source={require('../../public/images/previous.png')} 
                         /> 
+                        */}
                       </View>
                       <View style={[style.border,style.vw_TempActual_Valor]}>
-                        <Text style={[style.txt_TempActual_Valor]}> 
-                            29°
-                        </Text>
+                          
+                          <Text style={[style.txt_TempActual_Valor]} > 
+                              {this.state.data_temp_actual}°
+                           </Text>
+
                         <Text style={[style.txt_TempActual_Simbolo]}> 
                             C
                         </Text>
                       </View>
                       <View style={[style.border,style.vw_TempActual_Btn_NextPrev]}>
+                        {/*
                         <Image 
                         style={style.bgImage_icon}
                         resizeMode="contain"  
                         source={require('../../public/images/next.png')} 
-                        /> 
+                        />
+                        */}
                       </View>
                   </View>
-
-                  <View style={[style.border , style.vw_PronosticoDia/*,{ borderTopWidth: 1,borderBottomWidth: 1, borderColor: '#ffffff'  }*/]} >
-                      <View style={[style.border,style.vw_PronosticoDia_cel]}>
-                        <View style={{flex: 1 ,  justifyContent: 'center', alignItems: 'center'}}>
-                              <Image 
-                              style={style.bgImage_PronosticoDia}
-                              resizeMode="contain"  
-                              source={require('../../public/images/humedad.png')} 
-                              />
-                             <Text style={{color : v_ColorText}} >humedad %</Text>   
-                        </View>
-                      </View>
-                      <View style={[style.border,style.vw_PronosticoDia_cel]}>
-                        <View style={{flex: 1 ,  justifyContent: 'center', alignItems: 'center'}}>
-                                <Image 
-                                style={style.bgImage_PronosticoDia}
-                                resizeMode="contain"  
-                                source={require('../../public/images/temperatura.png')} 
-                                />
-                              <Text style={{color : v_ColorText}} >max° / min°</Text>   
-                        </View>
-                      </View>
-                      <View style={[style.border,style.vw_PronosticoDia_cel]}>
-                          <View style={{flex: 1 ,  justifyContent: 'center', alignItems: 'center'}}>
+                  {/* ***************************************************************************************** */} 
+                  <View style = {style.lineStyle} />      
+                  {/* ***************************************************************************************** */}   
+                      <View style={[style.border , style.vw_PronosticoDia/*,{ borderTopWidth: 1,borderBottomWidth: 1, borderColor: '#ffffff'  }*/]} >
+                          <View style={[style.border,style.vw_PronosticoDia_cel]}>
+                            <View style={{flex: 1 ,  justifyContent: 'center', alignItems: 'center'}}>
+                                  <Image 
+                                  style={style.bgImage_PronosticoDia}
+                                  resizeMode="contain"  
+                                  source={require('../../public/images/humedad.png')} 
+                                  />
+                                <Text style={{color : v_ColorText}} >{this.state.data_humedad_actual} %</Text>   
+                            </View>
+                          </View>
+                          <View style={[style.border,style.vw_PronosticoDia_cel]}>
+                            <View style={{flex: 1 ,  justifyContent: 'center', alignItems: 'center'}}>
                                     <Image 
                                     style={style.bgImage_PronosticoDia}
                                     resizeMode="contain"  
-                                    source={require('../../public/images/viento.png')} 
+                                    source={require('../../public/images/temperatura.png')} 
                                     />
-                                  <Text style={{color : v_ColorText}} > nudos km/h </Text>   
+                                  <Text style={{color : v_ColorText}} >{this.state.data_t_max_actual}° / {this.state.data_t_min_actual}</Text>   
+                            </View>
+                          </View>
+                          <View style={[style.border,style.vw_PronosticoDia_cel]}>
+                              <View style={{flex: 1 ,  justifyContent: 'center', alignItems: 'center'}}>
+                                        <Image 
+                                        style={style.bgImage_PronosticoDia}
+                                        resizeMode="contain"  
+                                        source={require('../../public/images/viento.png')} 
+                                        />
+                                      <Text style={{color : v_ColorText}} > {this.state.data_viento_actual} m/s </Text>   
+                              </View>
                           </View>
                       </View>
-                  </View>
-                 
+                  
+                  {/* ***************************************************************************************** */}        
+                  <View style = {style.lineStyle} /> 
+                 {/* ***************************************************************************************** */}
                   <View style={[{flex:1,justifyContent: 'center', alignItems: 'center'}]}>
                         <View style={[style.border , style.vw_PronosticoSemana]} >
 
-                            <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
-                                      <Image 
-                                      style={style.bgImage_icon}
-                                      resizeMode="contain"  
-                                      source={require('../../public/images/sol.png')} 
-                                      /> 
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.55,  justifyContent: 'center' , marginLeft: 10}]}>
-                                    <Text style={style.txt_PronosticoSemanal_dia}>Lunes 11</Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_max}> 14° </Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_min}>10 °</Text>
-                                  </View>
-                            </View> 
+                            <FlatList
+                              data={this.state.data_resumen}
+                              renderItem={({item}) => <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
+                                                      <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                          <Image 
+                                                          style={style.bgImage_icon}
+                                                          resizeMode="contain"  
+                                                          source={require('../../public/images/sol.png')} 
+                                                          /> 
+                                                      </View>
+                                                      <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.45,  justifyContent: 'center' }]}>
+                                                        <Text style={style.txt_PronosticoSemanal_dia}>{item.DIA_NOM} {item.DIA}</Text>
+                                                      </View>
+                                                      <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                        <Text style={style.txt_PronosticoSemanal_max}> {item.T_MAX}° </Text>
+                                                      </View>
+                                                      <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                        <Text style={style.txt_PronosticoSemanal_min}> {item.T_MIN}°</Text>
+                                                      </View>
+                                                  </View>   
+                                          }
 
-                            <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
-                                      <Image 
-                                      style={style.bgImage_icon}
-                                      resizeMode="contain"  
-                                      source={require('../../public/images/sol.png')} 
-                                      /> 
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.55,  justifyContent: 'center' , marginLeft: 10}]}>
-                                    <Text style={style.txt_PronosticoSemanal_dia}>Lunes 11</Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_max}> 14° </Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_min}>10 °</Text>
-                                  </View>
-                            </View>  
-
-                            <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
-                                      <Image 
-                                      style={style.bgImage_icon}
-                                      resizeMode="contain"  
-                                      source={require('../../public/images/sol.png')} 
-                                      /> 
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.55,  justifyContent: 'center' , marginLeft: 10}]}>
-                                    <Text style={style.txt_PronosticoSemanal_dia}>Lunes 11</Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_max}> 14° </Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_min}>10 °</Text>
-                                  </View>
-                            </View>  
-
-                            <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
-                                      <Image 
-                                      style={style.bgImage_icon}
-                                      resizeMode="contain"  
-                                      source={require('../../public/images/sol.png')} 
-                                      /> 
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.55,  justifyContent: 'center' , marginLeft: 10}]}>
-                                    <Text style={style.txt_PronosticoSemanal_dia}>Lunes 11</Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_max}> 14° </Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_min}>10 °</Text>
-                                  </View>
-                            </View>  
-
-                            <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
-                                      <Image 
-                                      style={style.bgImage_icon}
-                                      resizeMode="contain"  
-                                      source={require('../../public/images/sol.png')} 
-                                      /> 
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.55,  justifyContent: 'center' , marginLeft: 10}]}>
-                                    <Text style={style.txt_PronosticoSemanal_dia}>Lunes 11</Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_max}> 14° </Text>
-                                  </View>
-                                  <View style={[style.border ,{width : v_PronosticoSemanal_WIDTH * 0.15,  justifyContent: 'center', alignItems: 'center'}]}>
-                                    <Text style={style.txt_PronosticoSemanal_min}>10 °</Text>
-                                  </View>
-                            </View>                      
+                            />                                                               
                             
                         </View>
                   </View>
+                {/* ***************************************************************************************** */}
           </View>
       </View> 
     )
