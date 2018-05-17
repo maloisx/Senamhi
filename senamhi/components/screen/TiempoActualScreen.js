@@ -1,9 +1,73 @@
 import React, { Component } from 'react';
-import {StyleSheet, FlatList , ActivityIndicator , Text,  View , Image , Dimensions , ListView , AsyncStorage} from 'react-native';
+
+import {StyleSheet
+  , FlatList 
+  , ActivityIndicator 
+  , Text
+  , View 
+  , Image 
+  , Dimensions 
+  , ListView 
+  , AsyncStorage} from 'react-native';
+
+  import { Icon } from 'react-native-elements'
+
+  import Carousel from 'react-native-carousel-view';
 
 const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
 const DEVICE_WIDTH = width
+
+const images = { 
+                'day1': require('../../public/images/day/1.png'), 
+                'day2': require('../../public/images/day/2.png'),
+                'day3': require('../../public/images/day/3.png'), 
+                'day21': require('../../public/images/day/21.png'), 
+                'day22': require('../../public/images/day/22.png'), 
+                'day23': require('../../public/images/day/23.png'), 
+                'day31': require('../../public/images/day/31.png'), 
+                'day32': require('../../public/images/day/32.png'), 
+                'day33': require('../../public/images/day/33.png'), 
+                'day41': require('../../public/images/day/41.png'), 
+                'day42': require('../../public/images/day/42.png'),
+                'day43': require('../../public/images/day/43.png'), 
+                'day51': require('../../public/images/day/51.png'), 
+                'day52': require('../../public/images/day/52.png'),
+                'day53': require('../../public/images/day/53.png'), 
+                'day61': require('../../public/images/day/61.png'), 
+                'day62': require('../../public/images/day/62.png'),
+                'day63': require('../../public/images/day/63.png'), 
+                'day71': require('../../public/images/day/71.png'), 
+                'day72': require('../../public/images/day/72.png'),
+                'day73': require('../../public/images/day/73.png'), 
+                'day81': require('../../public/images/day/81.png'), 
+                'day82': require('../../public/images/day/82.png'),
+                'day83': require('../../public/images/day/83.png'), 
+                'night1': require('../../public/images/night/1.png'), 
+                'night2': require('../../public/images/night/2.png'),
+                'night3': require('../../public/images/night/3.png'), 
+                'night21': require('../../public/images/night/21.png'), 
+                'night22': require('../../public/images/night/22.png'), 
+                'night23': require('../../public/images/night/23.png'), 
+                'night31': require('../../public/images/night/31.png'), 
+                'night32': require('../../public/images/night/32.png'), 
+                'night33': require('../../public/images/night/33.png'), 
+                'night41': require('../../public/images/night/41.png'), 
+                'night42': require('../../public/images/night/42.png'),
+                'night43': require('../../public/images/night/43.png'), 
+                'night51': require('../../public/images/night/51.png'), 
+                'night52': require('../../public/images/night/52.png'),
+                'night53': require('../../public/images/night/53.png'), 
+                'night61': require('../../public/images/night/61.png'), 
+                'night62': require('../../public/images/night/62.png'),
+                'night63': require('../../public/images/night/63.png'), 
+                'night71': require('../../public/images/night/71.png'), 
+                'night72': require('../../public/images/night/72.png'),
+                'night73': require('../../public/images/night/73.png'), 
+                'night81': require('../../public/images/night/81.png'), 
+                'night82': require('../../public/images/night/82.png'),
+                'night83': require('../../public/images/night/83.png'),
+               }
 
 const v_AnchoObjeto = DEVICE_HEIGHT / 16;
 const v_ColorText = 'white';
@@ -27,7 +91,10 @@ const style = {
   lineStyle:{
     borderWidth: 0.5,
     borderColor:'#ffffff',
-    margin:5,
+    margin: 5,
+  },
+  textColor:{
+    color : v_ColorText, 
   },
   backgroundImage : {
     position: 'absolute',
@@ -36,12 +103,12 @@ const style = {
     height: DEVICE_HEIGHT,
     width : DEVICE_WIDTH    
   },
-  vw_AniadirCiudad: {
+  vw_BuscarCiudad: {
     //flex: 1 , 
     //flexDirection: 'row',
     //justifyContent: 'center', 
     alignItems: 'flex-end',
-    height: v_AnchoObjeto * 1 ,
+    height: v_AnchoObjeto * 1.5 ,
     width : DEVICE_WIDTH   
   },
   bgImage_icon : {    
@@ -53,19 +120,35 @@ const style = {
     justifyContent: 'center', 
     alignItems: 'center',
     height: v_AnchoObjeto * 1 ,
-    width : DEVICE_WIDTH   
+    width : DEVICE_WIDTH , 
+    marginTop: v_AnchoObjeto / 3  ,
+    flexDirection: 'row',
   },
   txt_TempActual_Ciudad: {
     color    : v_ColorText,
     fontWeight : 'bold',
     fontSize : v_AnchoObjeto * 0.5
   },
+  vw_ciudad_Btn_Lateral: {
+    //flex: 1 , 
+    //justifyContent: 'center', 
+    //alignItems: 'center',
+    width : v_AnchoObjeto * 1  ,
+    //height: '100%'
+  },
+  vw_Ciudad_Text: {
+    flex: 1 ,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    //height: '100%',
+    //flexDirection: 'row'
+  },
   vw_TempActual: {
     //flex: 1 , 
     justifyContent: 'center', 
     alignItems: 'center',
     flexDirection: 'row',
-    height: v_AnchoObjeto * 3 ,
+    height: v_AnchoObjeto * 2 ,
     width : DEVICE_WIDTH   
   },
   vw_TempActual_Btn_NextPrev: {
@@ -98,7 +181,7 @@ const style = {
     //flex: 1 , 
     justifyContent: 'center', 
     alignItems: 'center',
-    height: v_AnchoObjeto * 1.5 ,
+    height: v_AnchoObjeto * 1,
     width : DEVICE_WIDTH ,
     flexDirection: 'row' 
   },
@@ -109,8 +192,8 @@ const style = {
     height: v_AnchoObjeto * 2   
   },
   bgImage_PronosticoDia : {    
-    height: v_AnchoObjeto * 0.6,
-    width : v_AnchoObjeto * 0.6   
+    height: v_AnchoObjeto * 0.5,
+    width : v_AnchoObjeto * 0.5   
   },
   vw_PronosticoSemana: {
     flex: 1 , 
@@ -118,19 +201,51 @@ const style = {
     justifyContent: 'space-between',
     //alignItems: 'center',
     //height: v_AnchoObjeto * 1 ,
-    width : v_PronosticoSemanal_WIDTH   
+    //width : v_PronosticoSemanal_WIDTH   
   },
   vw_PronosticoSemanal_cel: {
     flex: 1 ,     
     flexDirection: 'row',
     //alignItems: 'center',
     //justifyContent: 'space-between',
-    height: v_AnchoObjeto * 1.5   ,
-    width : v_PronosticoSemanal_WIDTH 
+    height: v_AnchoObjeto * 1.5  ,
+    //width : v_PronosticoSemanal_WIDTH 
+  },
+  vw_PronosticoExtendido: {
+    //flex: 1 , 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    height: v_AnchoObjeto * 2.2 ,
+    width : DEVICE_WIDTH ,
+    flexDirection: 'row' 
+  },
+  vw_PronosticoSemana_row: {
+    flex: 1 , 
+    flexDirection: 'row',
+    margin: 2,
+    //justifyContent: 'space-between',
+    //alignItems: 'center',
+    //height: v_AnchoObjeto * 1 ,
+    //width : v_PronosticoSemanal_WIDTH   
   },
   txt_PronosticoSemanal_dia: {color : v_ColorText , fontWeight : 'bold', fontSize : v_AnchoObjeto * 0.4 },
   txt_PronosticoSemanal_max: {color : v_ColorText , fontWeight : 'bold', fontSize : v_AnchoObjeto * 0.4 },
   txt_PronosticoSemanal_min: {color : v_ColorText ,                      fontSize : v_AnchoObjeto * 0.4 },
+  
+  vw_CarouselContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  vw_CarouselContentContainer: {
+    //borderWidth: 2,
+    //borderColor: '#CCC',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width : DEVICE_WIDTH , 
+    height: DEVICE_HEIGHT
+  },
 }
 
 
@@ -149,15 +264,34 @@ export default class TiempoActualScreen extends Component {
       data_detalle: {} ,
       data_temp_actual : null ,
 
-      xxx : null,
+      icon : null,
     };
   }
 
   componentDidMount() {
 
-    AsyncStorage.getItem('@xxx').then((value) => this.setState({ 'xxx': value }))
+    //AsyncStorage.getItem('@latitude').then((value) => this.setState({ latitude : value }));
+    //AsyncStorage.getItem('@longitude').then((value) => this.setState({ longitude: value }));
 
-    navigator.geolocation.getCurrentPosition(
+    AsyncStorage.getAllKeys((err, keys) => {
+      AsyncStorage.multiGet(keys, (err, stores) => {
+        stores.map((result, i, store) => {
+          // get at each store's key/value so you can work with it
+          var key = store[i][0];
+          var value = store[i][1];
+
+          if(key == '@latitude') 
+            this.setState({ latitude : value });
+          if(key == '@longitude') 
+            this.setState({ longitude : value });
+        });
+        this.fn_llenar_datos();
+      } 
+      
+    );
+    });
+
+    /*navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
           latitude: position.coords.latitude,
@@ -165,13 +299,13 @@ export default class TiempoActualScreen extends Component {
           error: null,
         });
 
-        /* ************************ */
-        this.fn_llenar_datos();            
-        /* ************************ */
+        //////////////////
+        //this.fn_llenar_datos();            
+        /////////////////////////
       },
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
-    );
+    );*/
 
   }
 
@@ -202,9 +336,45 @@ export default class TiempoActualScreen extends Component {
             console.error(error);
           });
 
+
     }
 
   render() {
+    /*
+    const listViewCarousel = [];
+    listViewCarousel.push({ view: <View style={style.vw_CarouselContentContainer} >
+                                    <View style={[style.border , style.vw_PronosticoSemana]} >
+                                      <FlatList
+                                            data={this.state.data_resumen}
+                                            renderItem={({item}) => <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
+                                                                    <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                                        <Image 
+                                                                        style={style.bgImage_icon}
+                                                                        resizeMode="contain"  
+                                                                        source={require('../../public/images/sol.png')} 
+                                                                        /> 
+                                                                    </View>
+                                                                    <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.45,  justifyContent: 'center' }]}>
+                                                                      <Text style={style.txt_PronosticoSemanal_dia}>{item.DIA_NOM} {item.DIA}</Text>
+                                                                    </View>
+                                                                    <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                                      <Text style={style.txt_PronosticoSemanal_max}> {item.T_MAX}° </Text>
+                                                                    </View>
+                                                                    <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                                      <Text style={style.txt_PronosticoSemanal_min}> {item.T_MIN}°</Text>
+                                                                    </View>
+                                                                </View>   
+                                                        }
+                                          />
+                                    </View>
+                                  </View> 
+                          });
+    listViewCarousel.push({ view: <View style={style.vw_CarouselContentContainer} >
+                                <Text>2</Text>
+                                </View> 
+                          });                     
+    
+    */
     return (
         <View style={style.conteiner} >
           
@@ -215,23 +385,30 @@ export default class TiempoActualScreen extends Component {
         />
           <View style={style.conteiner_form} >
                   {/* ***************************************************************************************** */}
-                  <View style={[style.border , style.vw_AniadirCiudad]} >
-
-                        {/*
-                        <Text>Latitude: {this.state.latitude} / Longitude: {this.state.longitude}</Text>
-                        */}
-                        <Text>{this.state.xxx}</Text>
-
-                     
-                        <Image 
-                        style={style.bgImage_icon}
-                        resizeMode="contain"  
-                        source={require('../../public/images/plus.png')} 
-                        /> 
-                  </View>
+              
                   {/* ***************************************************************************************** */}
                   <View style={[style.border , style.vw_NombreCiudad]} >
-                    <Text style={style.txt_TempActual_Ciudad} > {this.state.ciudad} </Text> 
+                      <View style={[style.border,style.vw_ciudad_Btn_Lateral]}>
+                            <Icon
+                            //reverse
+                            name='refresh'
+                            type='FontAwesome'
+                            color='#ffffff'
+                            
+                            onPress={() => console.log('hello')}  />
+                      </View>
+                      <View style={[style.border,style.vw_Ciudad_Text]}>
+                          <Text style={style.txt_TempActual_Ciudad} > {this.state.ciudad} </Text>    
+                      </View>     
+                      <View style={[style.border,style.vw_ciudad_Btn_Lateral]}>
+                           <Icon
+                            //reverse
+                            name='search'
+                            type='FontAwesome'
+                            color='#ffffff'
+                            
+                            onPress={() => console.log('hello')}  />
+                      </View>            
                   </View>
                   {/* ***************************************************************************************** */}
                   <View style={[style.border , style.vw_TempActual]} >
@@ -302,35 +479,91 @@ export default class TiempoActualScreen extends Component {
                   
                   {/* ***************************************************************************************** */}        
                   <View style = {style.lineStyle} /> 
+                  {/* ***************************************************************************************** */}        
+                  <View style={[style.border , style.vw_PronosticoExtendido/*,{ borderTopWidth: 1,borderBottomWidth: 1, borderColor: '#ffffff'  }*/]} >
+                    <View style={[style.border , style.vw_PronosticoSemana_row]} >
+
+                        <FlatList
+                          data={this.state.data_detalle}
+                          renderItem={({item}) => { 
+                        
+                              return ( 
+                                <View style={{flex: 1 
+                                           , justifyContent: 'center'
+                                           , alignItems: 'center'
+                                           , width : 80
+                                           , flexDirection: 'column'
+                                           }}>
+                                    <Text style={style.textColor} >{item.DD}/{item.MM}</Text>
+                                    <Text style={style.textColor}>{item.HH}:{item.MI}</Text>
+                                    <Image 
+                                        style={{height: v_AnchoObjeto *0.7 , width: v_AnchoObjeto *0.7  }}
+                                        resizeMode="cover" 
+                                        source={images[item.TURNO + parseInt(item.ICON)]} 
+                                    />
+                                    <Text style={style.textColor}>{item.TEMPERATURA}°</Text>
+                                    
+                                  </View>
+                              )
+                          }}
+                          horizontal
+                          style={{ height: v_AnchoObjeto * 2, }}
+                      />  
+
+                    </View>                        
+                  </View>
+                  {/* ***************************************************************************************** */}        
+                  <View style = {style.lineStyle} /> 
                  {/* ***************************************************************************************** */}
                   <View style={[{flex:1,justifyContent: 'center', alignItems: 'center'}]}>
+                   {/*
+                   <View style={style.vw_CarouselContainer}>
+                        <FlatList
+                          data={listViewCarousel}
+                          renderItem={({item}) => {
+                              return ( 
+                                  <View>
+                                    {item.view}
+                                  </View>
+                              )
+                          }}
+                          horizontal
+                          style={{
+                            height: DEVICE_HEIGHT,                            
+                        }}
+                      />
+                   </View>
+                  */}      
+
+                        {
                         <View style={[style.border , style.vw_PronosticoSemana]} >
+                          <FlatList
+                            data={this.state.data_resumen}
+                            renderItem={({item}) => <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
+                                                    <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                        <Image 
+                                                        style={style.bgImage_icon}
+                                                        resizeMode="contain"  
+                                                        source={require('../../public/images/sol.png')} 
+                                                        /> 
+                                                    </View>
+                                                    <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.45,  justifyContent: 'center' }]}>
+                                                      <Text style={style.txt_PronosticoSemanal_dia}>{item.DIA_NOM} {item.DIA}</Text>
+                                                    </View>
+                                                    <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                      <Text style={style.txt_PronosticoSemanal_max}> {item.T_MAX}° </Text>
+                                                    </View>
+                                                    <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                      <Text style={style.txt_PronosticoSemanal_min}> {item.T_MIN}°</Text>
+                                                    </View>
+                                                </View>   
+                                        }
 
-                            <FlatList
-                              data={this.state.data_resumen}
-                              renderItem={({item}) => <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
-                                                      <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                          <Image 
-                                                          style={style.bgImage_icon}
-                                                          resizeMode="contain"  
-                                                          source={require('../../public/images/sol.png')} 
-                                                          /> 
-                                                      </View>
-                                                      <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.45,  justifyContent: 'center' }]}>
-                                                        <Text style={style.txt_PronosticoSemanal_dia}>{item.DIA_NOM} {item.DIA}</Text>
-                                                      </View>
-                                                      <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                        <Text style={style.txt_PronosticoSemanal_max}> {item.T_MAX}° </Text>
-                                                      </View>
-                                                      <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                        <Text style={style.txt_PronosticoSemanal_min}> {item.T_MIN}°</Text>
-                                                      </View>
-                                                  </View>   
-                                          }
+                          />
+                          </View>
+                        }      
+                        
 
-                            />                                                               
-                            
-                        </View>
                   </View>
                 {/* ***************************************************************************************** */}
           </View>

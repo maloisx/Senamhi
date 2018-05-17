@@ -8,6 +8,8 @@ import {
     View, Image , Dimensions , AsyncStorage
 } from 'react-native'
 
+import { Icon } from 'react-native-elements'
+
 
 import React from 'react';
 
@@ -46,7 +48,14 @@ const DrawerNavigation = StackNavigator({
                     source={require('../../public/images/menu_icon.png')} 
                 />
             </TouchableHighlight>
-        </View>
+        </View> ,
+        /*headerRight : <Icon
+                        //reverse
+                        name='search'
+                        type='FontAwesome'
+                        color='#ffffff'
+                        
+                        onPress={() => console.log('hello')}  />*/
     })
 })
 

@@ -4,9 +4,12 @@ import {
   StyleSheet,
   Text,
   Button,
-  View , Image , Dimensions , Navigator , AsyncStorage
+  View , Image , Dimensions , Navigator , 
+  AsyncStorage ,
+  PermissionsAndroid
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import { Spinner } from 'nachos-ui'
 
 //import Main from '../components/main'
 
@@ -16,15 +19,14 @@ const DEVICE_WIDTH = width
 
 const style = {
   conteiner:{
-    flex: 1 
-    
+    flex: 1 ,
+    justifyContent: 'center', 
   },
   Splash: {
     flex: 1 , 
     justifyContent: 'center', 
     alignItems: 'center',
-    flexDirection: 'row'
-    
+    flexDirection: 'row'    
   },
   backgroundImage : {
     position: 'absolute',
@@ -56,20 +58,40 @@ export default class Splash extends Component {
   
   constructor(props) {
     super(props);
-    this.state = { title: 'SENAMHI'  }    
-    AsyncStorage.setItem("@xxx", "CARAJO");
+    this.state = {}    
+    //AsyncStorage.setItem("@xxx", "CARAJO");
   }
   componentDidMount(){
+
      // esperamos 2 segundos para pasar del splash al drawerStack que contikene el menu
       var nav = this.props.navigation;
-      setTimeout(function(){ 
-        nav.navigate('DrawerStack')  , this.state
-      }, 50); //2000
+
+      //setTimeout(function(){ 
+      //  nav.navigate('DrawerStack') 
+      //}, 50); //2000
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            error: null,
+          });
+          AsyncStorage.setItem("@latitude", this.state.latitude ); 
+          AsyncStorage.setItem("@longitude", this.state.longitude );  
+          
+          nav.navigate('DrawerStack') ;
+
+        },
+        (error) => this.setState({ error: error.message }),
+        { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
+      );
+
   }
 
   render() {
     
-    const version = '1.0';
+    const version = '1.1';
 
     return (
       <View style={style.conteiner}>
@@ -79,16 +101,26 @@ export default class Splash extends Component {
         source={require('../../public/images/fondo.jpg')} 
         />
 
-        <View style={style.Splash} >
-          <Image 
-            style={style.img_logo}
-            resizeMode="contain" 
-            source={require('../../public/images/logo.png')}             
-          />
-          <Text style={style.txt_version}>
-              v {version}
-          </Text>
-        </View>
+        
+
+          
+          <View style={style.Splash} >
+            <Image 
+              style={style.img_logo}
+              resizeMode="contain" 
+              source={require('../../public/images/logo.png')}             
+            />
+            <Text style={style.txt_version}>
+                v {version}
+            </Text>
+            
+          </View>
+
+            <View style={{ borderWidth: 0, justifyContent: 'center',alignItems: 'center',width : DEVICE_WIDTH , height : DEVICE_HEIGHT / 2  }}>
+              <Spinner color='#ffffff' />
+              <Text style={{color    : '#ffffff', fontWeight : 'bold',}}>Conectando con Satelites</Text>
+            </View>
+
 
       </View> 
     );
