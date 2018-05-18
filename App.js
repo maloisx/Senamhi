@@ -16,8 +16,6 @@ import { StackNavigator } from 'react-navigation';
 import Splash from './senamhi/components/screen/Splash'
 import DrawerStack from './senamhi/components/stacks/drawerStack'
 
-import {YellowBox} from 'react-native';
-YellowBox.ignoreWarnings(['Warning: ...']);
 
 const RootStack =  StackNavigator(
   {
@@ -31,7 +29,8 @@ const RootStack =  StackNavigator(
   {
     mode: 'modal',
     headerMode: 'none',
-    initialRouteName: 'Splash'
+    initialRouteName: 'Splash',
+    gesturesEnabled: false,
   }
 );
 

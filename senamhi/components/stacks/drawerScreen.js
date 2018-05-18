@@ -7,12 +7,13 @@ import AvisosScreen from '../screen/AvisosScreen';
 import AjustesScreen from '../screen/AjustesScreen';
 
 const DrawerScreen = DrawerNavigator({    
+    
     "Tiempo Actual": {screen: TiempoActualScreen},
-    "Mapas": {screen: MapasScreen},
+    "Mapas": {screen: MapasScreen},    
     "Avisos": {screen: AvisosScreen},
     "Ajustes": {screen: AjustesScreen},
 }, {
-    headerMode: 'none',
+    headerMode: 'none',    
 })
 
 export default DrawerScreen;

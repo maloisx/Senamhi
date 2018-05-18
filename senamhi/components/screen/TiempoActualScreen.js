@@ -8,11 +8,13 @@ import {StyleSheet
   , Image 
   , Dimensions 
   , ListView 
-  , AsyncStorage} from 'react-native';
-
-  import { Icon } from 'react-native-elements'
-
-  import Carousel from 'react-native-carousel-view';
+  , AsyncStorage
+  , TouchableHighlight 
+  , Modal 
+  , BackHandler 
+ } from 'react-native';
+ import { Spinner } from 'nachos-ui'
+  import { Icon , Overlay } from 'react-native-elements'
 
 const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
@@ -253,7 +255,7 @@ export default class TiempoActualScreen extends Component {
 
   constructor(props) {
     super(props);
-
+    
     this.state = {
       latitude: null,
       longitude: null,
@@ -265,127 +267,161 @@ export default class TiempoActualScreen extends Component {
       data_temp_actual : null ,
 
       icon : null,
+      isLoadingVisible : false , 
+      isFirstLoad : true,
     };
+   
   }
 
-  componentDidMount() {
+   componentDidMount() {
+     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+     this.fn_actualizar_datos();
+    }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    }
+  handleBackButton() {      
+      return true;
+  }
 
-    //AsyncStorage.getItem('@latitude').then((value) => this.setState({ latitude : value }));
-    //AsyncStorage.getItem('@longitude').then((value) => this.setState({ longitude: value }));
+  _changeStatesLoading(b){
+    this.setState({ isLoadingVisible: b});
+  }
 
-    AsyncStorage.getAllKeys((err, keys) => {
-      AsyncStorage.multiGet(keys, (err, stores) => {
-        stores.map((result, i, store) => {
-          // get at each store's key/value so you can work with it
-          var key = store[i][0];
-          var value = store[i][1];
-
-          if(key == '@latitude') 
-            this.setState({ latitude : value });
-          if(key == '@longitude') 
-            this.setState({ longitude : value });
-        });
-        this.fn_llenar_datos();
-      } 
+  fn_actualizar_datos(tipo){
       
-    );
-    });
+      if(this.state.isFirstLoad){
+        this.setState({ isFirstLoad: false});
+        tipo = 'new';
+      }
 
-    /*navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          error: null,
-        });
+      if(tipo == undefined){
+        this._changeStatesLoading(true);
+            fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
+            .then((response) => response.json())
+            .then((responseJson) => {
 
-        //////////////////
-        //this.fn_llenar_datos();            
-        /////////////////////////
-      },
-      (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
-    );*/
-
-  }
-
-    fn_llenar_datos(){
-        //fetch('http://172.25.0.210/rest/?ws=pronostico&c=Lima&f=')
-        //fetch('http://172.25.0.210/rest/?ws=pronostico&lon=-77.017130&lat=-12.072269')
-        //fetch('http://172.25.0.210/rest/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
-        fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
-          .then((response) => response.json())
-          .then((responseJson) => {
-
-            this.setState({
-              data: responseJson ,
-              ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
-              data_resumen : responseJson.RESUMEN ,
-              data_detalle : responseJson.DETALLE , 
-              data_temp_actual : responseJson.DETALLE[0].TEMPERATURA,
-              data_humedad_actual : responseJson.RESUMEN[0].RH,
-              data_t_max_actual : responseJson.RESUMEN[0].T_MAX,
-              data_t_min_actual : responseJson.RESUMEN[0].T_MIN,
-              data_viento_actual : responseJson.RESUMEN[0].RACHA,
-            }, function(){
-                
+              this.setState({
+                data: responseJson ,
+                ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
+                data_resumen : responseJson.RESUMEN ,
+                data_detalle : responseJson.DETALLE , 
+                data_temp_actual : responseJson.DETALLE[0].TEMPERATURA,
+                data_humedad_actual : responseJson.RESUMEN[0].RH,
+                data_t_max_actual : responseJson.RESUMEN[0].T_MAX,
+                data_t_min_actual : responseJson.RESUMEN[0].T_MIN,
+                data_viento_actual : responseJson.RESUMEN[0].RACHA,
+              }, function(){
+                  
+              });
+              this._changeStatesLoading(false);  
+            })
+            .catch((error) =>{
+              console.error(error);
             });
+      }
 
-          })
-          .catch((error) =>{
-            console.error(error);
+      if(tipo == 'new'){
+        
+        this._changeStatesLoading(true);
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.setState({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              error: null,
+            });
+            
+            //AsyncStorage.setItem("@latitude", this.state.latitude ); 
+            //AsyncStorage.setItem("@longitude", this.state.longitude );     
+            fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+position.coords.longitude+'&lat='+position.coords.latitude)
+            .then((response) => response.json())
+            .then((responseJson) => {
+
+              this.setState({
+                data: responseJson ,
+                ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
+                data_resumen : responseJson.RESUMEN ,
+                data_detalle : responseJson.DETALLE , 
+                data_temp_actual : responseJson.DETALLE[0].TEMPERATURA,
+                data_humedad_actual : responseJson.RESUMEN[0].RH,
+                data_t_max_actual : responseJson.RESUMEN[0].T_MAX,
+                data_t_min_actual : responseJson.RESUMEN[0].T_MIN,
+                data_viento_actual : responseJson.RESUMEN[0].RACHA,
+              }, function(){
+                  
+              });
+              this._changeStatesLoading(false);  
+            })
+            .catch((error) =>{
+              console.error(error);
+            });
+          },
+          (error) => this.setState({ error: error.message }),
+          { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
+        );
+        //
+      }
+
+
+/*
+      //fetch('http://172.25.0.210/rest/?ws=pronostico&c=Lima&f=')
+      //fetch('http://172.25.0.210/rest/?ws=pronostico&lon=-77.017130&lat=-12.072269')
+      //fetch('http://172.25.0.210/rest/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
+      fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          this.setState({
+            data: responseJson ,
+            ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
+            data_resumen : responseJson.RESUMEN ,
+            data_detalle : responseJson.DETALLE , 
+            data_temp_actual : responseJson.DETALLE[0].TEMPERATURA,
+            data_humedad_actual : responseJson.RESUMEN[0].RH,
+            data_t_max_actual : responseJson.RESUMEN[0].T_MAX,
+            data_t_min_actual : responseJson.RESUMEN[0].T_MIN,
+            data_viento_actual : responseJson.RESUMEN[0].RACHA,
+          }, function(){
+              
           });
 
+        })
+        .catch((error) =>{
+          console.error(error);
+        });*/
 
-    }
+
+  }
 
   render() {
-    /*
-    const listViewCarousel = [];
-    listViewCarousel.push({ view: <View style={style.vw_CarouselContentContainer} >
-                                    <View style={[style.border , style.vw_PronosticoSemana]} >
-                                      <FlatList
-                                            data={this.state.data_resumen}
-                                            renderItem={({item}) => <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
-                                                                    <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                                        <Image 
-                                                                        style={style.bgImage_icon}
-                                                                        resizeMode="contain"  
-                                                                        source={require('../../public/images/sol.png')} 
-                                                                        /> 
-                                                                    </View>
-                                                                    <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.45,  justifyContent: 'center' }]}>
-                                                                      <Text style={style.txt_PronosticoSemanal_dia}>{item.DIA_NOM} {item.DIA}</Text>
-                                                                    </View>
-                                                                    <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                                      <Text style={style.txt_PronosticoSemanal_max}> {item.T_MAX}° </Text>
-                                                                    </View>
-                                                                    <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                                      <Text style={style.txt_PronosticoSemanal_min}> {item.T_MIN}°</Text>
-                                                                    </View>
-                                                                </View>   
-                                                        }
-                                          />
-                                    </View>
-                                  </View> 
-                          });
-    listViewCarousel.push({ view: <View style={style.vw_CarouselContentContainer} >
-                                <Text>2</Text>
-                                </View> 
-                          });                     
     
-    */
     return (
-        <View style={style.conteiner} >
-          
+       <View style={style.conteiner} >
+
+        <Overlay
+          isVisible={this.state.isLoadingVisible}
+          windowBackgroundColor="rgba(255, 255, 255, 0.5)"
+          overlayBackgroundColor="rgba(36, 97, 153, 0.7)"
+          width="auto"
+          height="auto"          
+          overlayStyle={{justifyContent: 'center',alignItems: 'center' }}
+        > 
+          <Spinner color="white" />          
+          <Text style={{color    : v_ColorText,
+                        //fontWeight : 'bold',
+                        fontSize : v_AnchoObjeto * 0.3}} >
+              Buscando satelites...
+          </Text>
+        </Overlay>
+
         <Image 
         style={style.backgroundImage}
         resizeMode="cover" 
         source={require('../../public/images/fondo.jpg')} 
         />
-          <View style={style.conteiner_form} >
-                  {/* ***************************************************************************************** */}
-              
+          <View style={style.conteiner_form} >                  
                   {/* ***************************************************************************************** */}
                   <View style={[style.border , style.vw_NombreCiudad]} >
                       <View style={[style.border,style.vw_ciudad_Btn_Lateral]}>
@@ -395,10 +431,12 @@ export default class TiempoActualScreen extends Component {
                             type='FontAwesome'
                             color='#ffffff'
                             
-                            onPress={() => console.log('hello')}  />
+                            onPress={() => this.fn_actualizar_datos('new')}  />
                       </View>
                       <View style={[style.border,style.vw_Ciudad_Text]}>
-                          <Text style={style.txt_TempActual_Ciudad} > {this.state.ciudad} </Text>    
+                          <Text style={style.txt_TempActual_Ciudad} > 
+                            {this.state.ciudad} 
+                          </Text>    
                       </View>     
                       <View style={[style.border,style.vw_ciudad_Btn_Lateral]}>
                            <Icon
@@ -507,6 +545,7 @@ export default class TiempoActualScreen extends Component {
                               )
                           }}
                           horizontal
+                          showsHorizontalScrollIndicator={false}
                           style={{ height: v_AnchoObjeto * 2, }}
                       />  
 
@@ -565,7 +604,16 @@ export default class TiempoActualScreen extends Component {
                         
 
                   </View>
+                  {/* ***************************************************************************************** */}
+                  <View style={[style.border,{width:DEVICE_WIDTH ,justifyContent: 'center', alignItems: 'center'}]} >
+                      
+                          <Text style={{color:v_ColorText}}> 
+                            {this.state.latitude} /  {this.state.longitude}
+                          </Text>   
+                                  
+                  </View>
                 {/* ***************************************************************************************** */}
+                
           </View>
       </View> 
     )

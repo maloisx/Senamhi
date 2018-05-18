@@ -19,8 +19,6 @@ const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
 const DEVICE_WIDTH = width
 
-
-
 const DrawerNavigation = StackNavigator({
     DrawerStack: {screen: DrawerScreen}
 }, {
@@ -31,6 +29,8 @@ const DrawerNavigation = StackNavigator({
             paddingLeft: 10,
             paddingRight: 10
         },
+        
+        gesturesEnabled: false,
         title: "SENAMHI"  ,
         headerTintColor: 'white',
         headerLeft: <View>
