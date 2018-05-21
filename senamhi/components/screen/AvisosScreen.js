@@ -1,80 +1,123 @@
 import React, { Component } from 'react';
-import { Text,  View ,Image } from 'react-native';
-import { Button , Card , Indicator , Typography} from 'nachos-ui'
+import { Text,  View ,Image , Dimensions, FlatList  } from 'react-native';
+import { Icon , Overlay , Card , Button } from 'react-native-elements'
+
+const { width , height } = Dimensions.get('window')
+const DEVICE_HEIGHT = height
+const DEVICE_WIDTH = width
+
+const v_AnchoObjeto = DEVICE_HEIGHT / 16;
+const v_ColorText = 'white';
 
 const btnStyle = { margin: 15 }
 const cardStyle = { margin: 15, width: 280 }
 const textStyle = { margin: 15 }
-const imageStyle = {
-  width: 50,
-  height: 50,
-  borderRadius: 10,
-}
-const indicatorStyle = {
-  marginRight: 30,
-}
 
 const style = {
   conteiner:{
     flex: 1 
   },
   conteiner_form:{
-    flex: 1 ,   
-    flexDirection: 'column'
+    flex: 1 
   }
 }
 
 export default class AvisosScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      isLoadingVisible : false ,    
+      data : Array(),
+    };
+   
+  }
+
+  _changeStatesLoading(b){
+    this.setState({ isLoadingVisible: b});
+  }
+
+  componentDidMount() {
+      this._CargarAlertas();
+  }
+
+  _CargarAlertas(){
+
+        
+    var dataRest = {
+      'p_schema': 'SISWEB',
+      'p_pkg': 'pkg_ws.sp_obt_alertas',
+      'p_param': ''
+      };
+
+      const URLSearchParams = Object.keys(dataRest).map((key) => {
+        return encodeURIComponent(key) + '=' + encodeURIComponent(dataRest[key]);
+        }).join('&');
+
+    var RequestRest = {
+                    method: 'post',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                    body: URLSearchParams
+                  };
+    
+    this._changeStatesLoading(true);
+    fetch('http://sgd.senamhi.gob.pe/ws/rest/open/ora/' , RequestRest )
+    //fetch('http://172.25.13.1:8085/ws/rest/open/ora/' , RequestRest )
+            .then((response) => response.json())
+            .then((responseJson) => {
+              console.log(responseJson);
+              this.setState({
+                data: responseJson.data ,                
+              }, function(){
+                  
+              });
+              this._changeStatesLoading(false);  
+            })
+            .catch((error) =>{
+              console.error(error);
+            });
+
+  }
+
   render() {
     return (
       <View style={style.conteiner_form}>
+           
+            <FlatList
+            data={this.state.data}
+            renderItem={({item}) => <Card
+                                    title={item.TITULO}
+                                    image={{uri: item.IMG}}
+                                    //imageStyle={{height:DEVICE_HEIGHT * 0.7,padding: 10}}
+                                    >
+                                    {/*
+
+                                    <Image
+                                      style={{ height:DEVICE_HEIGHT *0.65 , margin : 10}}
+                                      resizeMode="contain"
+                                      source={{ uri: item.IMG }}
+                                    />
+*/}
+                                    <Text style={{marginBottom: 10}}>
+                                      {item.CONTENIDO}
+                                    </Text>
+                                    <Button
+                                      icon={<Icon name='code' color='#ffffff' />}
+                                      backgroundColor='#03A9F4'
+                                      fontFamily='Lato'
+                                      color='#ffffff'
+                                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                      title='Ver más' />
+                                  </Card>   
+                        }
+
+            />
+
       
-
-      <Indicator
-          position='right top'
-          value='2'
-          type='success'
-          style={indicatorStyle}
-        >
-          <Image
-            style={imageStyle}
-            source={{
-              uri: 'https://d3vv6lp55qjaqc.cloudfront.net/items/130d3E0o0E0I31460H0n/Untitled-1.png',
-            }}
-          />
-        </Indicator>
-
- <Card
-        footerContent='The avocado is a tree that is native to Mexico'
-        image='https://upx.cz/BsN'
-        style={cardStyle}
-      />
-
-      <Button type='success' style={btnStyle}>Success</Button>
-      <Button type='danger' style={btnStyle}>Danger</Button>
-      <Button style={btnStyle}>Primary</Button>
-
-      <Button kind='squared' type='success' style={btnStyle}>
-        Success
-      </Button>
-      <Button kind='squared' type='danger' style={btnStyle}>
-        Danger
-
-      </Button>
-      <Button
-        kind='squared'
-        iconName='md-cloud-download'
-        style={btnStyle}
-      >
-        Primary
-      </Button>
-
-      <Button type='success' disabled style={btnStyle}>
-        Success
-      </Button>
-      <Button kind='squared' type='danger' disabled style={btnStyle}>
-        Danger
-      </Button>
+      
     </View> 
     )
   }
