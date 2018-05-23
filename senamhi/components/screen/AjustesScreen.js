@@ -27,7 +27,7 @@ export default class AjustesScreen extends Component {
     return (
         
               <View style={styles.contentContainer}>
-                <Text>Page ajustes</Text>
+                <Text>Page ajustes prueba de cambio git</Text>
               </View>
               
     )
