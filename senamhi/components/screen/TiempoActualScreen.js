@@ -16,6 +16,8 @@ import {StyleSheet
  import { Spinner } from 'nachos-ui'
   import { Icon , Overlay } from 'react-native-elements'
 
+
+
 const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
 const DEVICE_WIDTH = width
@@ -260,7 +262,7 @@ export default class TiempoActualScreen extends Component {
       latitude: null,
       longitude: null,
       error: null,
-      //data : null , 
+      data : Array() , 
       ciudad :null,
       data_resumen : null,
       data_detalle: {} ,
@@ -280,9 +282,10 @@ export default class TiempoActualScreen extends Component {
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
     }
-  handleBackButton() {      
-      return true;
-  }
+
+    handleBackButton() {      
+        return true;
+    }
 
   _changeStatesLoading(b){
     this.setState({ isLoadingVisible: b});
@@ -297,10 +300,10 @@ export default class TiempoActualScreen extends Component {
 
       if(tipo == undefined){
         this._changeStatesLoading(true);
-            fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
-            .then((response) => response.json())
-            .then((responseJson) => {
 
+            fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
+            .then((response) => response .json())
+            .then((responseJson) => {
               this.setState({
                 data: responseJson ,
                 ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
@@ -317,7 +320,7 @@ export default class TiempoActualScreen extends Component {
               this._changeStatesLoading(false);  
             })
             .catch((error) =>{
-              console.error(error);
+              console.error("---------------------->"+error);
             });
       }
 
@@ -338,7 +341,7 @@ export default class TiempoActualScreen extends Component {
             fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+position.coords.longitude+'&lat='+position.coords.latitude)
             .then((response) => response.json())
             .then((responseJson) => {
-
+              
               this.setState({
                 data: responseJson ,
                 ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
@@ -355,7 +358,7 @@ export default class TiempoActualScreen extends Component {
               this._changeStatesLoading(false);  
             })
             .catch((error) =>{
-              console.error(error);
+              console.error("XXXXXX>>>>"+error);
             });
           },
           (error) => this.setState({ error: error.message }),
@@ -523,8 +526,8 @@ export default class TiempoActualScreen extends Component {
 
                         <FlatList
                           data={this.state.data_detalle}
-                          renderItem={({item}) => { 
-                        
+                          keyExtractor={item => item.FECHA + item.HORA}
+                          renderItem={({item}) => {                        
                               return ( 
                                 <View style={{flex: 1 
                                            , justifyContent: 'center'
@@ -578,6 +581,7 @@ export default class TiempoActualScreen extends Component {
                         <View style={[style.border , style.vw_PronosticoSemana]} >
                           <FlatList
                             data={this.state.data_resumen}
+                            keyExtractor={item => item.FECHA}
                             renderItem={({item}) => <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
                                                     <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
                                                         <Image 
