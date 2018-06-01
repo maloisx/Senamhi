@@ -4,6 +4,9 @@
  * @flow
  */
 
+import { YellowBox } from 'react-native'
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated'])
+
 import React, { Component } from 'react';
 import {
   Platform,

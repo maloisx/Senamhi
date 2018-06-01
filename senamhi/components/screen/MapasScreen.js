@@ -131,7 +131,7 @@ export default class MapasScreen extends Component {
     fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=puntos_mapa')
     .then((response) => response.json())
     .then((responseJson) => {
-
+      //console.log(responseJson);
       this.setState({
         data: responseJson
       });
