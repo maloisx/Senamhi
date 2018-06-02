@@ -13,8 +13,10 @@ import {StyleSheet
   , Modal 
   , BackHandler 
  } from 'react-native';
- import { Spinner } from 'nachos-ui'
+ import { Spinner , H1  } from 'nachos-ui'
   import { Icon , Overlay } from 'react-native-elements'
+  
+  import { material , systemWeights } from 'react-native-typography'
 
 
 
@@ -152,7 +154,7 @@ const style = {
     justifyContent: 'center', 
     alignItems: 'center',
     flexDirection: 'row',
-    height: v_AnchoObjeto * 2 ,
+    height: v_AnchoObjeto * 4 ,
     width : DEVICE_WIDTH   
   },
   vw_TempActual_Btn_NextPrev: {
@@ -169,18 +171,27 @@ const style = {
     height: '100%',
     flexDirection: 'row'
   },
-  txt_TempActual_Valor: {
+  /*txt_TempActual_Valor: {
     color    : v_ColorText,
-    fontWeight : 'bold',
-    fontSize : v_AnchoObjeto * 1.8
-  },
-  txt_TempActual_Simbolo: {
-    color    : v_ColorText,
-    fontWeight : 'bold',
-    fontSize : v_AnchoObjeto ,
-    marginTop: DEVICE_HEIGHT * -0.1 / 30  ,
-    marginLeft: 0
-  },
+    fontWeight : '100',
+    fontSize : v_AnchoObjeto * 3.8,    
+    letterSpacing: -10,
+  },*/
+  txt_TempActual_Valor: [
+    material.display4White , systemWeights.thin , {color : v_ColorText , letterSpacing: -10,}
+  ],
+  txt_TempActual_Simbolo: [
+    material.display2White , 
+    systemWeights.bold , 
+      { 
+        color : v_ColorText , 
+        //letterSpacing: -10,
+        //fontSize : v_AnchoObjeto ,
+        marginTop: DEVICE_HEIGHT * -0.1 / 30  ,
+        marginLeft: 0
+      }
+    
+  ],
   vw_PronosticoDia: {
     //flex: 1 , 
     justifyContent: 'center', 
@@ -212,7 +223,7 @@ const style = {
     flexDirection: 'row',
     //alignItems: 'center',
     //justifyContent: 'space-between',
-    height: v_AnchoObjeto * 1.5  ,
+    height: v_AnchoObjeto * 1  ,
     //width : v_PronosticoSemanal_WIDTH 
   },
   vw_PronosticoExtendido: {
@@ -292,7 +303,7 @@ export default class TiempoActualScreen extends Component {
   }
 
   fn_actualizar_datos(tipo){
-      
+      console.log("tipo: "+tipo)
       if(this.state.isFirstLoad){
         this.setState({ isFirstLoad: false});
         tipo = 'new';
@@ -330,6 +341,7 @@ export default class TiempoActualScreen extends Component {
 
         navigator.geolocation.getCurrentPosition(
           (position) => {
+
             this.setState({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
@@ -337,7 +349,8 @@ export default class TiempoActualScreen extends Component {
             });
             
             //AsyncStorage.setItem("@latitude", this.state.latitude ); 
-            //AsyncStorage.setItem("@longitude", this.state.longitude );     
+            //AsyncStorage.setItem("@longitude", this.state.longitude );    
+            console.log('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+position.coords.longitude+'&lat='+position.coords.latitude) ;
             fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+position.coords.longitude+'&lat='+position.coords.latitude)
             .then((response) => response.json())
             .then((responseJson) => {
@@ -464,9 +477,10 @@ export default class TiempoActualScreen extends Component {
                       </View>
                       <View style={[style.border,style.vw_TempActual_Valor]}>
                           
-                          <Text style={[style.txt_TempActual_Valor]} > 
-                              {this.state.data_temp_actual}°
-                           </Text>
+                          <Text style={style.txt_TempActual_Valor} > 
+                              {Math.round(this.state.data_temp_actual)}°
+                          </Text>
+                          
 
                         <Text style={[style.txt_TempActual_Simbolo]}> 
                             C
@@ -558,26 +572,7 @@ export default class TiempoActualScreen extends Component {
                   <View style = {style.lineStyle} /> 
                  {/* ***************************************************************************************** */}
                   <View style={[{flex:1,justifyContent: 'center', alignItems: 'center'}]}>
-                   {/*
-                   <View style={style.vw_CarouselContainer}>
-                        <FlatList
-                          data={listViewCarousel}
-                          renderItem={({item}) => {
-                              return ( 
-                                  <View>
-                                    {item.view}
-                                  </View>
-                              )
-                          }}
-                          horizontal
-                          style={{
-                            height: DEVICE_HEIGHT,                            
-                        }}
-                      />
-                   </View>
-                  */}      
-
-                        {
+                          {
                         <View style={[style.border , style.vw_PronosticoSemana]} >
                           <FlatList
                             data={this.state.data_resumen}
