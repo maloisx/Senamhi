@@ -14,6 +14,7 @@ import { Icon } from 'react-native-elements'
 import React from 'react';
 
 import DrawerScreen from './drawerScreen';
+import TiempoActual from '../screen/TiempoActualScreen';
 
 const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height

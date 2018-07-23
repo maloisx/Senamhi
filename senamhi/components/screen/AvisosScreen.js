@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { Text,  View ,Image , Dimensions, FlatList  } from 'react-native';
-import { Icon , Overlay , Card , Button } from 'react-native-elements'
+import { Text,  View ,Image , Dimensions, FlatList , TouchableHighlight , Alert } from 'react-native';
+import { Icon , Overlay , Card , Button , Badge , Header } from 'react-native-elements'
+import Carousel from 'react-native-carousel-view';
+import {Bubble} from 'nachos-ui'
+
+const HeaderTitle = 'ALERTAS';
 
 const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
@@ -15,11 +19,57 @@ const textStyle = { margin: 15 }
 
 const style = {
   conteiner:{
-    flex: 1 
+    //flex: 1 ,    
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  conteiner_form:{
-    flex: 1 
-  }
+  contentContainer: {
+    borderWidth: 0,
+    borderColor: '#CCC',
+    flex: 1,
+    flexDirection: 'column',
+    //justifyContent: 'center',
+    //alignItems: 'center',
+    //width:DEVICE_WIDTH *0.5 ,
+    
+  },
+  Aviso_contenido_row:{ 
+    height:v_AnchoObjeto *0.6, 
+    flexDirection:'row',
+    alignItems: 'center', 
+    marginBottom:5,
+  },
+  Aviso_contenido_txt_subtitle:{ 
+    width: 130  ,
+    fontWeight : 'bold',
+  },
+  Aviso_contenido:{
+
+  },
+
+}
+
+const nivelesAlertas = { 
+  '01': {
+         colorFondo : 'white',
+         colorLetra : 'black',
+         msj : 'No es necesario tomar precauciones'
+  },
+  '02': {
+    colorFondo : 'yellow',
+    colorLetra : 'black',
+    msj : 'Sea prudente si realiza actividades al aire libre que puedan acarrear riesgos en caso de mal tiempo, pueden ocurrir fenómenos meteorológicos peligrosos que sin embargo son normales en esta región.  Manténgase al corriente del desarrollo de la situación meteorológica.'
+  },
+  '03': {
+    colorFondo : 'orange',
+    colorLetra : 'white',
+    msj : 'Se predice fenomenos meteorológicos peligrosos. Manténgase al corriente del desarrollo de la situación y cumpla los consejos e instrucciones dados por als autoridades.'
+  },
+  '04': {
+    colorFondo : 'red',
+    colorLetra : 'white',
+    msj : 'Sea extremadamente precavido; se predicen ...'
+  },
 }
 
 export default class AvisosScreen extends Component {
@@ -30,6 +80,7 @@ export default class AvisosScreen extends Component {
     this.state = {
       isLoadingVisible : false ,    
       data : Array(),
+      onLoadingComplete: false,
     };
    
   }
@@ -38,8 +89,24 @@ export default class AvisosScreen extends Component {
     this.setState({ isLoadingVisible: b});
   }
 
+  _changeOnLoadingComplete(b){
+    this.setState({ onLoadingComplete: b});
+  }
+
   componentDidMount() {
       this._CargarAlertas();
+      this._changeOnLoadingComplete(true);
+  }
+
+  _onPressHelpNivel(Nivel){
+    if(this.state.onLoadingComplete){
+       Alert.alert(
+        'Nivel ' + Nivel,
+        nivelesAlertas[Nivel].msj
+      )
+    }
+   
+
   }
 
   _CargarAlertas(){
@@ -84,33 +151,85 @@ export default class AvisosScreen extends Component {
 
   render() {
     return (
+
+      
+
       <View style={style.conteiner_form}>
-           
+           {/*
+           <Header
+            leftComponent={{}}
+            centerComponent={{ text: HeaderTitle , style: { fontWeight:'bold' , color: '#fff' } }}
+            rightComponent={{ }}
+          />*/}
+
             <FlatList
             data={this.state.data}
+            keyExtractor={item => item.COD_ALERTA + '_' + item.TITULO}
             renderItem={({item}) => <Card
-                                    title={item.TITULO}
-                                    image={{uri: item.IMG}}
-                                    //imageStyle={{height:DEVICE_HEIGHT * 0.7,padding: 10}}
+                                    title={ "Aviso N° " + item.COD_ALERTA+': ' +item.TITULO}
                                     >
-                                    {/*
+                                     
+                                        <Badge  onPress={() => this._onPressHelpNivel(item.NIVEL)}
+                                        containerStyle={{ backgroundColor: nivelesAlertas[item.NIVEL].colorFondo , marginBottom : 5}}>
+                                          <View style={{ flexDirection: 'row' , justifyContent: 'center',  alignItems: 'center', }}>
+                                            <Icon name='sms-failed' />
+                                            <Text style={{color:nivelesAlertas[item.NIVEL].colorLetra}}>
+                                              Nivel {item.NIVEL}                                             
+                                            </Text>
+                                            
+                                          </View>
+                                          
 
-                                    <Image
-                                      style={{ height:DEVICE_HEIGHT *0.65 , margin : 10}}
-                                      resizeMode="contain"
-                                      source={{ uri: item.IMG }}
-                                    />
-*/}
-                                    <Text style={{marginBottom: 10}}>
-                                      {item.CONTENIDO}
-                                    </Text>
-                                    <Button
-                                      icon={<Icon name='code' color='#ffffff' />}
-                                      backgroundColor='#03A9F4'
-                                      fontFamily='Lato'
-                                      color='#ffffff'
-                                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-                                      title='Ver más' />
+                                        </Badge>
+
+                                      <Carousel
+                                      width={DEVICE_WIDTH *0.85 }
+                                      height={DEVICE_HEIGHT *0.55}
+                                      animate={false}
+                                      indicatorAtBottom={true}
+                                      indicatorSize={15}
+                                      //indicatorText="•"
+                                      inactiveIndicatorText='•'
+                                      indicatorColor="#246199"
+                                      >
+                                      <View style={[style.contentContainer,
+                                                   { 
+                                                    justifyContent: 'center', 
+                                                    alignItems: 'center',
+                                                   }
+                                                  ]}>                                                                     
+                                          <Image
+                                            style={{
+                                                    height: DEVICE_HEIGHT*0.60,
+                                                    width : DEVICE_WIDTH *0.60  }}
+                                            resizeMode="center"
+                                            source={{ uri: item.IMG }}
+                                          />
+                                      </View>
+                                      <View style={style.contentContainer}>
+                                          
+                                          <View style={style.Aviso_contenido_row}>
+                                            <Text style={style.Aviso_contenido_txt_subtitle}>Inicio del evento: </Text>
+                                            <Text >{item.FECHA_INI}</Text>
+                                          </View>
+                                          
+                                          <View style={style.Aviso_contenido_row}>
+                                            <Text style={style.Aviso_contenido_txt_subtitle}>Fin del evento: </Text>
+                                            <Text >{item.FECHA_FIN}</Text>
+                                          </View>
+
+                                          <View style={style.Aviso_contenido_row}>
+                                            <Text style={style.Aviso_contenido_txt_subtitle}>Aviso: </Text>
+                                            <Text></Text>
+                                          </View>                                              
+                                          <Text style={{ textAlign:'center'}}>
+                                            {item.CONTENIDO}
+                                          </Text>
+
+                                      </View>
+                                    </Carousel>
+                                   
+                                    
                                   </Card>   
                         }
 

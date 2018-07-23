@@ -12,12 +12,13 @@ import {StyleSheet
   , TouchableHighlight 
   , Modal 
   , BackHandler 
- } from 'react-native';
- import { Spinner , H1  } from 'nachos-ui'
-  import { Icon , Overlay } from 'react-native-elements'
   
+ } from 'react-native';
+  import { Spinner , H1  } from 'nachos-ui'
+  import { Icon , Overlay } from 'react-native-elements'  
   import { material , systemWeights } from 'react-native-typography'
-
+  import { captureScreen } from "react-native-view-shot";
+  import Share, {ShareSheet, Button} from 'react-native-share';
 
 
 const { width , height } = Dimensions.get('window')
@@ -25,54 +26,50 @@ const DEVICE_HEIGHT = height
 const DEVICE_WIDTH = width
 
 const images = { 
-                'day1': require('../../public/images/day/1.png'), 
-                'day2': require('../../public/images/day/2.png'),
-                'day3': require('../../public/images/day/3.png'), 
-                'day21': require('../../public/images/day/21.png'), 
-                'day22': require('../../public/images/day/22.png'), 
-                'day23': require('../../public/images/day/23.png'), 
-                'day31': require('../../public/images/day/31.png'), 
-                'day32': require('../../public/images/day/32.png'), 
-                'day33': require('../../public/images/day/33.png'), 
-                'day41': require('../../public/images/day/41.png'), 
-                'day42': require('../../public/images/day/42.png'),
-                'day43': require('../../public/images/day/43.png'), 
-                'day51': require('../../public/images/day/51.png'), 
-                'day52': require('../../public/images/day/52.png'),
-                'day53': require('../../public/images/day/53.png'), 
-                'day61': require('../../public/images/day/61.png'), 
-                'day62': require('../../public/images/day/62.png'),
-                'day63': require('../../public/images/day/63.png'), 
-                'day71': require('../../public/images/day/71.png'), 
-                'day72': require('../../public/images/day/72.png'),
-                'day73': require('../../public/images/day/73.png'), 
-                'day81': require('../../public/images/day/81.png'), 
-                'day82': require('../../public/images/day/82.png'),
-                'day83': require('../../public/images/day/83.png'), 
-                'night1': require('../../public/images/night/1.png'), 
-                'night2': require('../../public/images/night/2.png'),
-                'night3': require('../../public/images/night/3.png'), 
-                'night21': require('../../public/images/night/21.png'), 
-                'night22': require('../../public/images/night/22.png'), 
-                'night23': require('../../public/images/night/23.png'), 
-                'night31': require('../../public/images/night/31.png'), 
-                'night32': require('../../public/images/night/32.png'), 
-                'night33': require('../../public/images/night/33.png'), 
-                'night41': require('../../public/images/night/41.png'), 
-                'night42': require('../../public/images/night/42.png'),
-                'night43': require('../../public/images/night/43.png'), 
-                'night51': require('../../public/images/night/51.png'), 
-                'night52': require('../../public/images/night/52.png'),
-                'night53': require('../../public/images/night/53.png'), 
-                'night61': require('../../public/images/night/61.png'), 
-                'night62': require('../../public/images/night/62.png'),
-                'night63': require('../../public/images/night/63.png'), 
-                'night71': require('../../public/images/night/71.png'), 
-                'night72': require('../../public/images/night/72.png'),
-                'night73': require('../../public/images/night/73.png'), 
-                'night81': require('../../public/images/night/81.png'), 
-                'night82': require('../../public/images/night/82.png'),
-                'night83': require('../../public/images/night/83.png'),
+                '01': require('../../public/images/icons/01.png'), 
+                '02': require('../../public/images/icons/02.png'),
+                '03': require('../../public/images/icons/03.png'), 
+                '04': require('../../public/images/icons/04.png'), 
+                '05': require('../../public/images/icons/05.png'), 
+                '06': require('../../public/images/icons/06.png'), 
+                '07': require('../../public/images/icons/07.png'), 
+                '08': require('../../public/images/icons/08.png'), 
+                '09': require('../../public/images/icons/09.png'), 
+                '10': require('../../public/images/icons/10.png'), 
+                '11': require('../../public/images/icons/11.png'),
+                '12': require('../../public/images/icons/12.png'), 
+                '13': require('../../public/images/icons/13.png'), 
+                '14': require('../../public/images/icons/14.png'),
+                '15': require('../../public/images/icons/15.png'), 
+                '16': require('../../public/images/icons/16.png'), 
+                '17': require('../../public/images/icons/17.png'),
+                '18': require('../../public/images/icons/18.png'), 
+                '19': require('../../public/images/icons/19.png'), 
+                //'20': require('../../public/images/icons/20.png'),
+                '21': require('../../public/images/icons/21.png'), 
+                '22': require('../../public/images/icons/22.png'), 
+                '23': require('../../public/images/icons/23.png'),
+                '24': require('../../public/images/icons/24.png'), 
+                '25': require('../../public/images/icons/25.png'), 
+                '26': require('../../public/images/icons/26.png'),
+                '27': require('../../public/images/icons/27.png'), 
+                '28': require('../../public/images/icons/28.png'), 
+                '29': require('../../public/images/icons/29.png'), 
+                //'30': require('../../public/images/icons/30.png'),
+                '31': require('../../public/images/icons/31.png'), 
+                '32': require('../../public/images/icons/32.png'), 
+                '33': require('../../public/images/icons/33.png'),
+                '34': require('../../public/images/icons/34.png'), 
+                '35': require('../../public/images/icons/35.png'), 
+                '36': require('../../public/images/icons/36.png'),
+                '37': require('../../public/images/icons/37.png'), 
+                '38': require('../../public/images/icons/38.png'), 
+                '39': require('../../public/images/icons/39.png'), 
+                '40': require('../../public/images/icons/40.png'),
+                '41': require('../../public/images/icons/41.png'), 
+                '42': require('../../public/images/icons/42.png'), 
+                '43': require('../../public/images/icons/43.png'),
+                '44': require('../../public/images/icons/44.png'), 
                }
 
 const v_AnchoObjeto = DEVICE_HEIGHT / 16;
@@ -118,18 +115,26 @@ const style = {
     width : DEVICE_WIDTH   
   },
   bgImage_icon : {    
-    height: v_AnchoObjeto * 0.7,
-    width : v_AnchoObjeto * 0.7   
+    height: v_AnchoObjeto * 1.2,
+    width : v_AnchoObjeto * 1.2   
   },
   vw_NombreCiudad: {
     //flex: 1 , 
     justifyContent: 'center', 
     alignItems: 'center',
-    height: v_AnchoObjeto * 1 ,
+    height: v_AnchoObjeto * 0.8 ,
     width : DEVICE_WIDTH , 
-    marginTop: v_AnchoObjeto / 3  ,
+    marginTop: v_AnchoObjeto / 4  ,
     flexDirection: 'row',
   },
+  vw_Fecha: {
+    //flex: 1 , 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    height: v_AnchoObjeto * 0.7 ,
+    width : DEVICE_WIDTH , 
+    flexDirection: 'row',
+  },  
   txt_TempActual_Ciudad: {
     color    : v_ColorText,
     fontWeight : 'bold',
@@ -154,7 +159,8 @@ const style = {
     justifyContent: 'center', 
     alignItems: 'center',
     flexDirection: 'row',
-    height: v_AnchoObjeto * 4 ,
+    height: v_AnchoObjeto * 3.5 ,
+    marginTop: v_AnchoObjeto / 4  ,
     width : DEVICE_WIDTH   
   },
   vw_TempActual_Btn_NextPrev: {
@@ -180,6 +186,10 @@ const style = {
   txt_TempActual_Valor: [
     material.display4White , systemWeights.thin , {color : v_ColorText , letterSpacing: -10,}
   ],
+  txt_TempActual_Text: [{
+    color : v_ColorText,
+    textAlign: 'center',
+  }],
   txt_TempActual_Simbolo: [
     material.display2White , 
     systemWeights.bold , 
@@ -220,7 +230,7 @@ const style = {
   },
   vw_PronosticoSemanal_cel: {
     flex: 1 ,     
-    flexDirection: 'row',
+    //flexDirection: 'row',
     //alignItems: 'center',
     //justifyContent: 'space-between',
     height: v_AnchoObjeto * 1  ,
@@ -230,7 +240,7 @@ const style = {
     //flex: 1 , 
     justifyContent: 'center', 
     alignItems: 'center',
-    height: v_AnchoObjeto * 2.2 ,
+    height: v_AnchoObjeto * 1.8 ,
     width : DEVICE_WIDTH ,
     flexDirection: 'row' 
   },
@@ -268,22 +278,63 @@ export default class TiempoActualScreen extends Component {
 
   constructor(props) {
     super(props);
+     
+    console.log(props);
     
-    this.state = {
-      latitude: null,
-      longitude: null,
-      error: null,
-      data : Array() , 
-      ciudad :null,
-      data_resumen : null,
-      data_detalle: {} ,
-      data_temp_actual : null ,
+    var busqueda_lat = props.navigation.getParam('lat','');
+    var busqueda_lon = props.navigation.getParam('lon','');
+    console.log('busqueda_lat' + busqueda_lat );
+    console.log('busqueda_lon' + busqueda_lon );
+    
 
-      icon : null,
-      isLoadingVisible : false , 
-      isFirstLoad : true,
+    this.state = {
+      latitude: busqueda_lat,
+      longitude: busqueda_lon,
+      error: '',
+      data : Array() , 
+      ciudad :'',
+      data_resumen : '',
+      txt_fecha : '',
+      data_detalle: Array() ,
+
+      data_temp_actual : '',
+      data_txt_pronostico : '',
+
+      icon : '',
+      isLoadingVisible :false , 
+      isFirstLoad :  ((busqueda_lat+busqueda_lon == '')?true:false),
+
+      imageURI : 'https://reactnativecode.com/wp-content/uploads/2018/02/motorcycle.jpg', 
+
     };
    
+  }
+
+  _captureScreenFunction(){
+ 
+    captureScreen({
+      format: "jpg",
+      quality: 0.8
+    })
+    .then(      
+      uri => {
+              //this.setState({ imageURI : uri });
+              console.log(uri);
+              //var urlFile = uri.replace("file://","");
+              //console.log(urlFile);
+              //RNFileShare.shareFiles(urlFile);   
+
+              var shareOptions = {
+                title: "SENAMHI APP",
+                message: "Pronostico del tiempo desde el SENAMHI APP.",
+                url: uri,
+                subject: "PRONOSTICO DEL TIEMPO" //  for email
+              };
+              Share.open(shareOptions);
+            },
+      error => console.error("Oops, Something Went Wrong", error)
+    );
+ 
   }
 
    componentDidMount() {
@@ -302,37 +353,130 @@ export default class TiempoActualScreen extends Component {
     this.setState({ isLoadingVisible: b});
   }
 
+  _ws(ws_url , ws_params){
+      var response = Array();
+      var formBody = [];
+      for (var property in ws_params) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(ws_params[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+
+      return fetch(ws_url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
+          body: formBody
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+           //console.log(responseJson);        
+           return responseJson;      
+        })
+        .catch((error) =>{
+          console.error("x2>>>>"+error);
+        });
+
+        
+  }
+
+  _CargarDatos = () => {
+    /* WS PARA UBICACION ******************************************************************************* */
+    var ws_params = {
+      'p_schema': 'appsenamhi',
+       'p_pkg': 'PKG.SP_OBT_UBIC',
+       'p_param': '["'+this.state.latitude+'","'+this.state.longitude+'"]',
+       //'p_param' : '["-13.0803167","-77.0391641"]'
+     };   
+     this._changeStatesLoading(true);          
+    this._ws('http://sgd.senamhi.gob.pe/ws/rest/open/ora', ws_params)
+    .then(ws_data => {
+      data= ws_data.data[0];
+      console.log(data);
+      this.setState({
+         ciudad: data.NOM_DEP + ' / ' + data.NOM_DIST,                
+       });
+       this._changeStatesLoading(false);
+    });
+    /* /.WS PARA UBICACION ******************************************************************************* */
+    /* WS PARA RESUMEN *********************************************************************************** */
+    var ws_params = {
+     'p_schema': 'appsenamhi',
+      'p_pkg': 'PKG.SP_OBT_PRONOS_RESUMEN',
+      'p_param': '["'+this.state.latitude+'","'+this.state.longitude+'"]',
+      //'p_param' : '["-13.0803167","-77.0391641"]'
+    }; 
+    this._changeStatesLoading(true);            
+   this._ws('http://sgd.senamhi.gob.pe/ws/rest/open/ora', ws_params)
+   .then(ws_data => {
+     data= ws_data.data;
+     console.log(data);
+     this.setState({
+       data_resumen : data,
+       txt_fecha : data[0].HOY,      
+       data_t_max_actual : data[0].TEMP_MAX,
+       data_t_min_actual : data[0].TEMP_MIN,       
+       data_txt_pronostico: data[0].DES_PRON,
+
+      });
+      this._changeStatesLoading(false);
+   });
+   /* /.WS PARA RESUMEN *********************************************************************************** */
+   /* WS PARA DETALLE *********************************************************************************** */
+   var ws_params = {
+     'p_schema': 'appsenamhi',
+      'p_pkg': 'PKG.SP_OBT_PRONOS_DETALLE',
+      'p_param': '["'+this.state.latitude+'","'+this.state.longitude+'"]',
+      //'p_param' : '["-13.0803167","-77.0391641"]'
+    };
+   this._changeStatesLoading(true);             
+   this._ws('http://sgd.senamhi.gob.pe/ws/rest/open/ora', ws_params)
+   .then(ws_data => {
+     data= ws_data.data;
+     console.log(data);
+
+     var v_data_temp_actual = '';
+     var v_data_humedad_actual = '';
+     var v_data_viento_actual = '';
+
+     for(var i = 0 ; i < data.length ; i++ ){
+      if(data[i].ACT == '1'){
+          v_data_temp_actual = data[i].TEMP;
+          v_data_humedad_actual = data[i].HUM;
+          v_data_viento_actual = data[i].VIE;  
+          break;
+      }       
+     }
+
+     this.setState({
+       data_detalle : data ,
+       data_temp_actual : v_data_temp_actual,
+       data_humedad_actual : v_data_humedad_actual,
+       data_viento_actual : v_data_viento_actual,
+      });
+
+      this._changeStatesLoading(false);
+
+   });
+   /* /.WS PARA DETALLE *********************************************************************************** */
+    
+    
+  }
+
   fn_actualizar_datos(tipo){
-      console.log("tipo: "+tipo)
+      //console.log("tipo: "+tipo)
       if(this.state.isFirstLoad){
         this.setState({ isFirstLoad: false});
-        tipo = 'new';
+        tipo = 'new';        
+      }else{
+        tipo = 'list_buscar';
       }
 
-      if(tipo == undefined){
+      if(tipo == undefined || tipo == 'list_buscar'){
         this._changeStatesLoading(true);
-
-            fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
-            .then((response) => response .json())
-            .then((responseJson) => {
-              this.setState({
-                data: responseJson ,
-                ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
-                data_resumen : responseJson.RESUMEN ,
-                data_detalle : responseJson.DETALLE , 
-                data_temp_actual : responseJson.DETALLE[0].TEMPERATURA,
-                data_humedad_actual : responseJson.RESUMEN[0].RH,
-                data_t_max_actual : responseJson.RESUMEN[0].T_MAX,
-                data_t_min_actual : responseJson.RESUMEN[0].T_MIN,
-                data_viento_actual : responseJson.RESUMEN[0].RACHA,
-              }, function(){
-                  
-              });
-              this._changeStatesLoading(false);  
-            })
-            .catch((error) =>{
-              console.error("---------------------->"+error);
-            });
+        this._CargarDatos();        
       }
 
       if(tipo == 'new'){
@@ -350,65 +494,21 @@ export default class TiempoActualScreen extends Component {
             
             //AsyncStorage.setItem("@latitude", this.state.latitude ); 
             //AsyncStorage.setItem("@longitude", this.state.longitude );    
-            console.log('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+position.coords.longitude+'&lat='+position.coords.latitude) ;
-            fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+position.coords.longitude+'&lat='+position.coords.latitude)
-            .then((response) => response.json())
-            .then((responseJson) => {
-              
-              this.setState({
-                data: responseJson ,
-                ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
-                data_resumen : responseJson.RESUMEN ,
-                data_detalle : responseJson.DETALLE , 
-                data_temp_actual : responseJson.DETALLE[0].TEMPERATURA,
-                data_humedad_actual : responseJson.RESUMEN[0].RH,
-                data_t_max_actual : responseJson.RESUMEN[0].T_MAX,
-                data_t_min_actual : responseJson.RESUMEN[0].T_MIN,
-                data_viento_actual : responseJson.RESUMEN[0].RACHA,
-              }, function(){
-                  
-              });
-              this._changeStatesLoading(false);  
-            })
-            .catch((error) =>{
-              console.error("XXXXXX>>>>"+error);
-            });
+            
+           this._CargarDatos();
+
+           this._changeStatesLoading(false);
+
+
           },
-          (error) => this.setState({ error: error.message }),
+          (error) =>{   
+                      console.log(error.message);
+                      this.setState({ error: error.message } )   
+                    },
           { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
         );
-        //
+        
       }
-
-
-/*
-      //fetch('http://172.25.0.210/rest/?ws=pronostico&c=Lima&f=')
-      //fetch('http://172.25.0.210/rest/?ws=pronostico&lon=-77.017130&lat=-12.072269')
-      //fetch('http://172.25.0.210/rest/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
-      fetch('http://www.senamhi.gob.pe/sistemas/smartmet/?ws=pronostico&lon='+this.state.longitude+'&lat='+this.state.latitude)
-        .then((response) => response.json())
-        .then((responseJson) => {
-
-          this.setState({
-            data: responseJson ,
-            ciudad: responseJson.LOCACION.DISTRITO + ' / ' + responseJson.LOCACION.DEPARTAMENTO,
-            data_resumen : responseJson.RESUMEN ,
-            data_detalle : responseJson.DETALLE , 
-            data_temp_actual : responseJson.DETALLE[0].TEMPERATURA,
-            data_humedad_actual : responseJson.RESUMEN[0].RH,
-            data_t_max_actual : responseJson.RESUMEN[0].T_MAX,
-            data_t_min_actual : responseJson.RESUMEN[0].T_MIN,
-            data_viento_actual : responseJson.RESUMEN[0].RACHA,
-          }, function(){
-              
-          });
-
-        })
-        .catch((error) =>{
-          console.error(error);
-        });*/
-
-
   }
 
   render() {
@@ -437,7 +537,8 @@ export default class TiempoActualScreen extends Component {
         resizeMode="cover" 
         source={require('../../public/images/fondo.jpg')} 
         />
-          <View style={style.conteiner_form} >                  
+          <View style={style.conteiner_form} >                 
+                  
                   {/* ***************************************************************************************** */}
                   <View style={[style.border , style.vw_NombreCiudad]} >
                       <View style={[style.border,style.vw_ciudad_Btn_Lateral]}>
@@ -459,10 +560,24 @@ export default class TiempoActualScreen extends Component {
                             //reverse
                             name='search'
                             type='FontAwesome'
-                            color='#ffffff'
-                            
-                            onPress={() => console.log('hello')}  />
+                            color='#ffffff'                            
+                            onPress={() => {
+                                            //console.log('hello')
+                                            var nav = this.props.navigation;
+                                            nav.navigate("Buscar Ciudad",{ lat: '' , lon : ''  });
+                                           }
+                                    }  
+                            />
                       </View>            
+                  </View>
+                  {/* ***************************************************************************************** */}
+                  {/* ***************************************************************************************** */}
+                  <View style={[style.border , style.vw_Fecha]} >
+                      <View style={[style.border,style.vw_Ciudad_Text]}>
+                          <Text style={style.txt_TempActual_Ciudad} > 
+                            {this.state.txt_fecha} 
+                          </Text>    
+                      </View> 
                   </View>
                   {/* ***************************************************************************************** */}
                   <View style={[style.border , style.vw_TempActual]} >
@@ -476,15 +591,27 @@ export default class TiempoActualScreen extends Component {
                         */}
                       </View>
                       <View style={[style.border,style.vw_TempActual_Valor]}>
-                          
-                          <Text style={style.txt_TempActual_Valor} > 
-                              {Math.round(this.state.data_temp_actual)}°
-                          </Text>
+
+                          <View style={{flexDirection:'column'}}>
+                             
+                              <View style={{flexDirection:'row',justifyContent: 'center',alignItems: 'center',flex:1}}>
+                                  <Text style={style.txt_TempActual_Valor} > 
+                                      {Math.round(this.state.data_temp_actual)}°
+                                  </Text>
+                                  <Text style={[style.txt_TempActual_Simbolo]}> 
+                                      C
+                                  </Text>
+                              </View>
+
+                              <View style={[style.border,{justifyContent: 'center', alignItems: 'center'}]}>
+                                  <Text style={[style.txt_TempActual_Text]}>  
+                                      {this.state.data_txt_pronostico}
+                                  </Text>
+                              </View>
+
+                          </View>
                           
 
-                        <Text style={[style.txt_TempActual_Simbolo]}> 
-                            C
-                        </Text>
                       </View>
                       <View style={[style.border,style.vw_TempActual_Btn_NextPrev]}>
                         {/*
@@ -540,8 +667,8 @@ export default class TiempoActualScreen extends Component {
 
                         <FlatList
                           data={this.state.data_detalle}
-                          keyExtractor={item => item.FECHA + item.HORA}
-                          renderItem={({item}) => {                        
+                          keyExtractor={item => item.DD + '_' + item.HH}
+                          renderItem={({item,index}) => {                         
                               return ( 
                                 <View style={{flex: 1 
                                            , justifyContent: 'center'
@@ -549,21 +676,23 @@ export default class TiempoActualScreen extends Component {
                                            , width : 80
                                            , flexDirection: 'column'
                                            }}>
+                                    {/*        
                                     <Text style={style.textColor} >{item.DD}/{item.MM}</Text>
+                                    */}
                                     <Text style={style.textColor}>{item.HH}:{item.MI}</Text>
                                     <Image 
-                                        style={{height: v_AnchoObjeto *0.7 , width: v_AnchoObjeto *0.7  }}
+                                        style={{height: v_AnchoObjeto * 1 , width: v_AnchoObjeto * 1  }}
                                         resizeMode="cover" 
-                                        source={images[item.TURNO + parseInt(item.ICON)]} 
+                                        source={images[item.ICON]} 
                                     />
-                                    <Text style={style.textColor}>{item.TEMPERATURA}°</Text>
+                                    <Text style={style.textColor}>{item.TEMP}°</Text>
                                     
                                   </View>
                               )
-                          }}
-                          horizontal
-                          showsHorizontalScrollIndicator={false}
+                          }}                          
+                          horizontal={true}
                           style={{ height: v_AnchoObjeto * 2, }}
+                          showsHorizontalScrollIndicator={false}
                       />  
 
                     </View>                        
@@ -577,24 +706,32 @@ export default class TiempoActualScreen extends Component {
                           <FlatList
                             data={this.state.data_resumen}
                             keyExtractor={item => item.FECHA}
-                            renderItem={({item}) => <View style={[style.border,style.vw_PronosticoSemanal_cel]}>                        
-                                                    <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                        <Image 
-                                                        style={style.bgImage_icon}
-                                                        resizeMode="contain"  
-                                                        source={require('../../public/images/sol.png')} 
-                                                        /> 
-                                                    </View>
-                                                    <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.45,  justifyContent: 'center' }]}>
-                                                      <Text style={style.txt_PronosticoSemanal_dia}>{item.DIA_NOM} {item.DIA}</Text>
-                                                    </View>
-                                                    <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                      <Text style={style.txt_PronosticoSemanal_max}> {item.T_MAX}° </Text>
-                                                    </View>
-                                                    <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
-                                                      <Text style={style.txt_PronosticoSemanal_min}> {item.T_MIN}°</Text>
-                                                    </View>
-                                                </View>   
+                            renderItem={({item}) => <View style={[style.border,style.vw_PronosticoSemanal_cel,{flexDirection: 'column'}]}> 
+                                                      <View style={{flexDirection: 'row'}}>
+                                                          <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.15 ,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                              <Image 
+                                                              style={style.bgImage_icon}
+                                                              resizeMode="contain"  
+                                                              source={images[item.ICON]} 
+                                                              /> 
+                                                          </View>
+                                                          <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.45,  justifyContent: 'center' }]}>
+                                                            <Text style={style.txt_PronosticoSemanal_dia}>{item.NOM_DIA} {item.DD}</Text>
+                                                          </View>
+                                                          <View style={[style.border ,style.borderBotton,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                            <Text style={style.txt_PronosticoSemanal_max}> {item.TEMP_MAX}° </Text>
+                                                          </View>
+                                                          <View style={[style.border,style.borderBotton ,{width : v_PronosticoSemanal_WIDTH * 0.20,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                            <Text style={style.txt_PronosticoSemanal_min}> {item.TEMP_MIN}°</Text>
+                                                          </View>
+                                                      </View>
+                                                      {/*
+                                                      <View style={[style.border,{width : v_PronosticoSemanal_WIDTH ,  justifyContent: 'center', alignItems: 'center'}]}>
+                                                          <Text style={style.txt_PronosticoSemanal_min} > {item.DES_PRON}</Text>
+                                                      </View>
+                                                      */}
+
+                                                    </View>   
                                         }
 
                           />
@@ -604,11 +741,28 @@ export default class TiempoActualScreen extends Component {
 
                   </View>
                   {/* ***************************************************************************************** */}
-                  <View style={[style.border,{width:DEVICE_WIDTH ,justifyContent: 'center', alignItems: 'center'}]} >
-                      
+                  
+                  <View style={[style.border,{width:DEVICE_WIDTH ,justifyContent: 'flex-end', alignItems: 'flex-end'}]} >
+
+                          <Icon
+                            reverse
+                            name='share'
+                            type='FontAwesome'
+                            color='#246199'                            
+                            onPress={() => {
+                                            console.log('captura de pantalla x!');
+                                            this._captureScreenFunction();
+                                            
+                                            //var nav = this.props.navigation;
+                                            //nav.navigate("Buscar Ciudad",{ lat: '' , lon : ''  });
+                                           }
+                                    }  
+                            />
+                          {/*
                           <Text style={{color:v_ColorText}}> 
                             {this.state.latitude} /  {this.state.longitude}
                           </Text>   
+                          */}  
                                   
                   </View>
                 {/* ***************************************************************************************** */}
