@@ -46,6 +46,10 @@ target 'Senamhi' do
 	
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'	
 
+  pod 'RNViewShot', :path => '../node_modules/react-native-view-shot'
+
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
 end
 
 post_install do |installer|

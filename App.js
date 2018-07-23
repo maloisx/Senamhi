@@ -28,12 +28,13 @@ const RootStack =  StackNavigator(
     ,DrawerStack: {
       screen: DrawerStack
     }
+    
   },  
   {
-    mode: 'modal',
+    //mode: 'modal',
     headerMode: 'none',
     initialRouteName: 'Splash',
-    gesturesEnabled: false,
+    //gesturesEnabled: false,
   }
 );
 
