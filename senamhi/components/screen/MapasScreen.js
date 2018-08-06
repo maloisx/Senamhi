@@ -104,6 +104,10 @@ const style = StyleSheet.create({
   conteiner:{
     flex: 1 
   },
+  border:{
+    borderWidth: 1,
+    borderColor: '#ffffff'    
+  },
   btn_Variable:{
     height: v_AnchoObjeto * 1.3 ,
     width : DEVICE_WIDTH 
@@ -131,10 +135,21 @@ const style = StyleSheet.create({
     //marginBottom: 10,
     backgroundColor: 'rgba(36, 97, 153, 0.7)',
 
-  },
+  },view_btn_maps: {
+    position: 'absolute',
+    //flex: 1, 
+    flexDirection: 'column',
+    //height: DEVICE_HEIGHT ,
+    width : v_AnchoObjeto * 2.4 ,  
+    justifyContent: 'flex-start', 
+    alignItems: 'flex-end',
+    //margin: v_AnchoObjeto / 4  ,
+    top: 10,
+    left: DEVICE_WIDTH - (v_AnchoObjeto * 2.4 ) - 10,
+  }  ,
   btn_mapa :{
     width : v_AnchoObjeto * 2.4 ,
-    marginRight: 25,
+    //marginRight: 25,
     marginBottom: 5, 
   },
   btn_mapa_txt :{
@@ -430,9 +445,9 @@ export default class MapasScreen extends Component {
         <MapView
           style={style.map}
           initialRegion={this.state.region}
-          onRegionChange={(region) => this.onRegionChange(region)}
-          minZoomLevel={this.state.zoomMin}
-          maxZoomLevel={this.state.zoomMax}
+          //onRegionChange={(region) => this.onRegionChange(region)}
+          //minZoomLevel={this.state.zoomMin}
+          //maxZoomLevel={this.state.zoomMax}
         >
 
           {this.state.data.map(marker => (
@@ -497,15 +512,7 @@ export default class MapasScreen extends Component {
 
         </MapView>
 
-          <View style={{
-                        flex: 1, 
-                        flexDirection: 'column',
-                        //height: DEVICE_HEIGHT ,
-                        width : DEVICE_WIDTH ,  
-                        justifyContent: 'flex-start', 
-                        alignItems: 'flex-end',
-                        margin: v_AnchoObjeto / 4  ,
-                      }}>
+          <View style={[style.view_btn_maps,style.border]}>
               <Button
                 containerStyle={style.btn_mapa}
                 titleStyle={style.btn_mapa_txt}
@@ -546,7 +553,7 @@ export default class MapasScreen extends Component {
                         marginBottom: v_AnchoObjeto / 2  ,
                         flexDirection: 'column'
                       }}>
-
+              {/*
               <Button
                 containerStyle={style.btn_mapa}
                 titleStyle={style.btn_mapa_txt}
@@ -558,7 +565,9 @@ export default class MapasScreen extends Component {
                   />
                 }
                 onPress={()=>this._BuscarPosicion()}
-              />         
+              />
+              */}          
+                       
               
           </View>
 

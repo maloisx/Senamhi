@@ -12,12 +12,12 @@ import {StyleSheet
   , TouchableHighlight 
   , Modal 
   , BackHandler 
-  
+  , Platform
  } from 'react-native';
   import { Spinner , H1  } from 'nachos-ui'
   import { Icon , Overlay } from 'react-native-elements'  
   import { material , systemWeights } from 'react-native-typography'
-  import { captureScreen } from "react-native-view-shot";
+  import { captureRef , captureScreen } from "react-native-view-shot";
   import Share, {ShareSheet, Button} from 'react-native-share';
 
 
@@ -313,17 +313,13 @@ export default class TiempoActualScreen extends Component {
   _captureScreenFunction(){
  
     captureScreen({
+    //  captureRef("view_body",{
       format: "jpg",
       quality: 0.8
     })
     .then(      
       uri => {
-              //this.setState({ imageURI : uri });
               console.log(uri);
-              //var urlFile = uri.replace("file://","");
-              //console.log(urlFile);
-              //RNFileShare.shareFiles(urlFile);   
-
               var shareOptions = {
                 title: "SENAMHI APP",
                 message: "Pronostico del tiempo desde el SENAMHI APP.",
@@ -333,8 +329,7 @@ export default class TiempoActualScreen extends Component {
               Share.open(shareOptions);
             },
       error => console.error("Oops, Something Went Wrong", error)
-    );
- 
+    ); 
   }
 
    componentDidMount() {
@@ -418,7 +413,8 @@ export default class TiempoActualScreen extends Component {
        txt_fecha : data[0].HOY,      
        data_t_max_actual : data[0].TEMP_MAX,
        data_t_min_actual : data[0].TEMP_MIN,       
-       data_txt_pronostico: data[0].DES_PRON,
+       data_txt_pronostico: data[0].DES_PRON, 
+       data_temp_actual : data[0].TEMP_MIN
 
       });
       this._changeStatesLoading(false);
@@ -441,9 +437,13 @@ export default class TiempoActualScreen extends Component {
      var v_data_humedad_actual = '';
      var v_data_viento_actual = '';
 
+     var t_min = this.state.data_t_max_actual;
+     var t_max = this.state.data_t_min_actual;
+
+
      for(var i = 0 ; i < data.length ; i++ ){
       if(data[i].ACT == '1'){
-          v_data_temp_actual = data[i].TEMP;
+          //v_data_temp_actual = data[i].TEMP;
           v_data_humedad_actual = data[i].HUM;
           v_data_viento_actual = data[i].VIE;  
           break;
@@ -452,7 +452,7 @@ export default class TiempoActualScreen extends Component {
 
      this.setState({
        data_detalle : data ,
-       data_temp_actual : v_data_temp_actual,
+       //data_temp_actual : v_data_temp_actual,
        data_humedad_actual : v_data_humedad_actual,
        data_viento_actual : v_data_viento_actual,
       });
@@ -514,7 +514,7 @@ export default class TiempoActualScreen extends Component {
   render() {
     
     return (
-       <View style={style.conteiner} >
+       <View style={style.conteiner}  ref="view_body"  >
 
         <Overlay
           isVisible={this.state.isLoadingVisible}
@@ -685,7 +685,7 @@ export default class TiempoActualScreen extends Component {
                                         resizeMode="cover" 
                                         source={images[item.ICON]} 
                                     />
-                                    <Text style={style.textColor}>{item.TEMP}°</Text>
+                                    <Text style={style.textColor}>{parseInt(item.TEMP)}°</Text>
                                     
                                   </View>
                               )
@@ -741,7 +741,7 @@ export default class TiempoActualScreen extends Component {
 
                   </View>
                   {/* ***************************************************************************************** */}
-                  
+                  {/*
                   <View style={[style.border,{width:DEVICE_WIDTH ,justifyContent: 'flex-end', alignItems: 'flex-end'}]} >
 
                           <Icon
@@ -751,20 +751,20 @@ export default class TiempoActualScreen extends Component {
                             color='#246199'                            
                             onPress={() => {
                                             console.log('captura de pantalla x!');
-                                            this._captureScreenFunction();
-                                            
+                                            this._captureScreenFunction();                                            
                                             //var nav = this.props.navigation;
                                             //nav.navigate("Buscar Ciudad",{ lat: '' , lon : ''  });
                                            }
                                     }  
                             />
-                          {/*
-                          <Text style={{color:v_ColorText}}> 
-                            {this.state.latitude} /  {this.state.longitude}
-                          </Text>   
-                          */}  
-                                  
+
+                          {
+                          //<Text style={{color:v_ColorText}}> 
+                          //  {this.state.latitude} /  {this.state.longitude}
+                          //</Text>   
+                          }                                    
                   </View>
+                  */}            
                 {/* ***************************************************************************************** */}
                 
           </View>

@@ -10,7 +10,7 @@ import BuscarCiudadScreen from '../screen/BuscarCiudadScreen';
 const DrawerScreen = DrawerNavigator({          
     
     "Pronostico del Día": {screen: TiempoActualScreen},
-    "Mapas": {screen: MapasScreen},   
+     "Mapas": {screen: MapasScreen},
     "Avisos": {screen: AvisosScreen}, 
     "Buscar Ciudad": {screen: BuscarCiudadScreen},
     //"Ajustes": {screen: AjustesScreen},

@@ -5,8 +5,11 @@ import {
     StyleSheet,
     TouchableHighlight,
     Text,
-    View, Image , Dimensions , AsyncStorage
+    View, Image , Dimensions , AsyncStorage  , Platform
 } from 'react-native'
+
+import { RNViewShot , captureScreen } from "react-native-view-shot";
+import Share, {ShareSheet, Button} from 'react-native-share';
 
 import { Icon } from 'react-native-elements'
 
@@ -14,11 +17,11 @@ import { Icon } from 'react-native-elements'
 import React from 'react';
 
 import DrawerScreen from './drawerScreen';
-import TiempoActual from '../screen/TiempoActualScreen';
 
 const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
 const DEVICE_WIDTH = width
+
 
 const DrawerNavigation = StackNavigator({
     DrawerStack: {screen: DrawerScreen}
@@ -40,7 +43,7 @@ const DrawerNavigation = StackNavigator({
                     if(navigation.state.index === 0){
                         navigation.navigate('DrawerOpen');
                     } else {
-                        navigation.navigate('DrawerClose');
+                        navigation.navigate('DrawerClose'); 
                     }
                 }}>
                 <Image 
@@ -50,13 +53,34 @@ const DrawerNavigation = StackNavigator({
                 />
             </TouchableHighlight>
         </View> ,
-        /*headerRight : <Icon
+        headerRight : <Icon
                         //reverse
-                        name='search'
+                        name='share'
                         type='FontAwesome'
-                        color='#ffffff'
-                        
-                        onPress={() => console.log('hello')}  />*/
+                        color='#ffffff'                        
+                        onPress={() => {
+                                        var plat = Platform.OS ;
+                                        console.log('compartir para: ' + plat); 
+                                        
+                                        captureScreen({
+                                              format: "jpg",
+                                              quality: 0.8
+                                            })
+                                            .then(      
+                                              uri => {
+                                                      console.log(uri);
+                                                      var shareOptions = {
+                                                        title: "SENAMHI APP",
+                                                        message: "Pronostico del tiempo desde el SENAMHI APP.",
+                                                        url: uri,
+                                                        subject: "PRONOSTICO DEL TIEMPO" //  for email
+                                                      };
+                                                      Share.open(shareOptions);
+                                                    },
+                                              error => console.error("Oops, Something Went Wrong", error)
+                                            ); 
+                                        }
+                                }  />
     })
 })
 
