@@ -3,6 +3,7 @@ package com.senamhi;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import cl.json.RNSharePackage;
 import cl.json.ShareApplication;
 import com.reactlibrary.RNFileSharePackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ShareApplication, Re
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImagePickerPackage(),
             new RNSharePackage(),
             new RNFileSharePackage(),
             new RNViewShotPackage(),

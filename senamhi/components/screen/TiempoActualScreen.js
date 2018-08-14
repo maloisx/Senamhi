@@ -105,7 +105,7 @@ const style = {
     left : 0,
     height: DEVICE_HEIGHT,
     width : DEVICE_WIDTH    
-  },
+  }, 
   vw_BuscarCiudad: {
     //flex: 1 , 
     //flexDirection: 'row',

@@ -175,11 +175,8 @@ export default class AvisosScreen extends Component {
                                             <Icon name='sms-failed' />
                                             <Text style={{color:nivelesAlertas[item.NIVEL].colorLetra}}>
                                               Nivel {item.NIVEL}                                             
-                                            </Text>
-                                            
+                                            </Text>                                            
                                           </View>
-                                          
-
                                         </Badge>
 
                                       <Carousel

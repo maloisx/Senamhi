@@ -9,8 +9,6 @@ import { AppRegistry,
   import SearchList, { HighlightableText } from '../../../library'
   import Touchable from '../../../library/utils/Touchable'
 
-
-
 const { width , height } = Dimensions.get('window')
 const DEVICE_HEIGHT = height
 const DEVICE_WIDTH = width
