@@ -9,11 +9,12 @@ import BuscarCiudadScreen from '../screen/BuscarCiudadScreen';
 import FotoSenamhiScreen from '../screen/FotoSenamhiScreen';
 
 const DrawerScreen = DrawerNavigator({          
-    "Comparte tu ciudad": {screen: FotoSenamhiScreen}, 
+    
     "Pronostico del Día": {screen: TiempoActualScreen},
     "Mapas": {screen: MapasScreen},
     "Avisos": {screen: AvisosScreen}, 
     "Buscar Ciudad": {screen: BuscarCiudadScreen},
+    "Comparte tu ciudad": {screen: FotoSenamhiScreen}, 
     //"Ajustes": {screen: AjustesScreen},
     
 }, {

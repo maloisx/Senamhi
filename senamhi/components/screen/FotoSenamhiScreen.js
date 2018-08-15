@@ -7,6 +7,7 @@ import { AppRegistry,
   Dimensions,
   TouchableHighlight,
   Image,
+  Platform,
   Alert  } from 'react-native';
 
 
@@ -33,6 +34,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   }, 
   containerShared : {
+    
     flex: 1, 
     position: 'absolute',
     top: 0,
@@ -41,6 +43,8 @@ const style = StyleSheet.create({
     //width : DEVICE_WIDTH  ,   
   }, 
   ContainerImage : {
+    borderWidth: 1,
+
     //position: 'absolute',
     //top: 0,
     //left : 0,
@@ -48,12 +52,12 @@ const style = StyleSheet.create({
     width : DEVICE_WIDTH  ,   
   },
     ContainerLogo : {
-    //borderWidth: 1,
+    borderWidth: 1,
     //borderColor: '#efefef',
-    flex: 1,    
+    //flex: 1,    
     position: 'absolute',
-    top: 0,
-    left : 0,
+    //op: 0,
+    //left : 0,
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
     height: DEVICE_HEIGHT ,
@@ -108,7 +112,7 @@ export default class FotoSenamhiScreen extends Component {
     captureRef(this.refs.ViewCapture,{
         format: "png",
         quality: 0.9,
-        result: "tmpfile",
+        result: Platform.OS === 'ios' ? "data-uri" : "tmpfile",
         snapshotContentContainer: false
       })
       .then(      
