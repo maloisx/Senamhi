@@ -8,7 +8,7 @@ import AjustesScreen from '../screen/AjustesScreen';
 import BuscarCiudadScreen from '../screen/BuscarCiudadScreen';
 import FotoSenamhiScreen from '../screen/FotoSenamhiScreen';
 
-const DrawerScreen = DrawerNavigator({          
+const DrawerScreen = DrawerNavigator({         
     
     "Pronostico del Día": {screen: TiempoActualScreen},
     "Mapas": {screen: MapasScreen},
