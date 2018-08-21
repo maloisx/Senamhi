@@ -378,6 +378,9 @@ export default class TiempoActualScreen extends Component {
   }
 
   _CargarDatos = () => {
+
+    console.log("-- "+this.state.latitude+' / '+this.state.longitude);
+
     /* WS PARA UBICACION ******************************************************************************* */
     var ws_params = {
       'p_schema': 'appsenamhi',
